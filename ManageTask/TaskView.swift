@@ -77,7 +77,7 @@ struct TaskView: View {
                 
                 Button {
                     // TODO: Toggle completeness
-                    task.markComplete()
+                    task.toggleCompleteness()
                 } label: {
                     TaskCompletionIconView(
                         for: task.isCompleted ?
@@ -85,6 +85,7 @@ struct TaskView: View {
                         foregroundColor: .white)
                 }
                 .frame(width: 24)
+                
                 
                 Image(systemName: "chevron.right")
                     .resizable()
@@ -105,7 +106,7 @@ struct TaskView: View {
 }
 
 #Preview {
-        var task = Task(
+        let task = Task(
             title: "Complete the task management app. Complete the task management app.",
             dueDate: Date(),
             priority: .high,

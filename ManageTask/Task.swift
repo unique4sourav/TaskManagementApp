@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 
 enum TaskPriority: Int {
     case low, medium, high
@@ -15,14 +17,15 @@ enum TaskPriority: Int {
     }
 }
 
+
 class Task: Identifiable, ObservableObject {
     let id = UUID()
-    var title: String
-    var dueDate: Date
-    var priority: TaskPriority
-    var notes: String?
+    @Published var title: String
+    @Published var dueDate: Date
+    @Published var priority: TaskPriority
+    @Published var notes: String?
     @Published private(set) var isCompleted: Bool = false
-    var completionDate: Date? = nil
+    @Published var completionDate: Date? = nil
     
     init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil,
          isCompleted: Bool = false, completionDate: Date? = nil) {
@@ -34,7 +37,7 @@ class Task: Identifiable, ObservableObject {
         self.completionDate = completionDate
     }
     
-    func markComplete() {
+    func toggleCompleteness() {
         if !isCompleted {
             isCompleted = true
             completionDate = Date()
