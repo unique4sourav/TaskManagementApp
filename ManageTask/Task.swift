@@ -15,16 +15,26 @@ enum TaskPriority: Int {
     }
 }
 
-struct Task: Identifiable {
+class Task: Identifiable, ObservableObject {
     let id = UUID()
     var title: String
     var dueDate: Date
     var priority: TaskPriority
     var notes: String?
-    private(set) var isCompleted: Bool = false
+    @Published private(set) var isCompleted: Bool = false
     var completionDate: Date? = nil
     
-    mutating func markComplete() {
+    init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil,
+         isCompleted: Bool = false, completionDate: Date? = nil) {
+        self.title = title
+        self.dueDate = dueDate
+        self.priority = priority
+        self.notes = notes
+        self.isCompleted = isCompleted
+        self.completionDate = completionDate
+    }
+    
+    func markComplete() {
         if !isCompleted {
             isCompleted = true
             completionDate = Date()
@@ -33,6 +43,5 @@ struct Task: Identifiable {
             isCompleted = false
             completionDate = nil
         }
-        print(isCompleted)
     }
 }

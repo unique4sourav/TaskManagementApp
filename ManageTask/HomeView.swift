@@ -28,7 +28,7 @@ struct HomeView: View {
                     Section(completionStatus) {
                         ForEach(tasksWithStatus(completionStatus)) { task in
                             ZStack(alignment: .leading) {
-                                TaskView(task: .constant(task))
+                                TaskView(task: task)
 //                                NavigationLink {
 //                                    EmptyView()
 //                                } label: {
