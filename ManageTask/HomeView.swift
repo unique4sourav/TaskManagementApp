@@ -20,7 +20,7 @@ struct HomeView: View {
             $0.isCompleted : $0.isCompleted == false }
         return filteredTasks
     }
-    
+    // TODO: update incomplete and complete list on toggling completeness
     var body: some View {
         NavigationStack {
             List {
@@ -29,12 +29,12 @@ struct HomeView: View {
                         ForEach(tasksWithStatus(completionStatus)) { task in
                             ZStack(alignment: .leading) {
                                 TaskView(task: task)
-//                                NavigationLink {
-//                                    EmptyView()
-//                                } label: {
-//                                    EmptyView()
-//                                }
-//                                .opacity(0)
+                                NavigationLink {
+                                    EmptyView()
+                                } label: {
+                                    EmptyView()
+                                }
+                                .opacity(0)
                             }
                             .listRowSeparator(.hidden)
                         }
