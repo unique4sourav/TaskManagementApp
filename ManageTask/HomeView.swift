@@ -10,22 +10,26 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     
-    var completionStatus: [String] {
-        Array(Set(viewModel.allTasks.map{ $0.isCompleted ? "Completed" : "Incomplete" }))
-            .sorted(by: >)
+    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Task] {
+        switch completionStatus {
+        case .overdue:
+            return viewModel.allTasks.filter{ $0.isCompleted == false && $0.dueDate < Date()}
+            
+        case .incomplete:
+            return viewModel.allTasks.filter{ $0.isCompleted == false && $0.dueDate > Date() }
+            
+        case .completed:
+            return viewModel.allTasks.filter{ $0.isCompleted == true }
+        }
+        
     }
     
-    func tasksWithStatus(_ completionStatus: String) -> [Task] {
-        let filteredTasks = viewModel.allTasks.filter{ completionStatus == "Completed" ?
-            $0.isCompleted : $0.isCompleted == false }
-        return filteredTasks
-    }
     // TODO: update incomplete and complete list on toggling completeness
     var body: some View {
         NavigationStack {
             List {
-                ForEach(completionStatus, id: \.hashValue) { completionStatus in
-                    Section(completionStatus) {
+                ForEach(TaskCompletionStatus.allCases, id: \.hashValue) { completionStatus in
+                    Section(completionStatus.rawValue) {
                         ForEach(tasksWithStatus(completionStatus)) { task in
                             ZStack(alignment: .leading) {
                                 TaskView(task: task)
