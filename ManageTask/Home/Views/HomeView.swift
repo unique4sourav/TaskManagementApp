@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
+    @State var shouldShowFilterAndShowView = false
     
     var body: some View {
         NavigationStack {
@@ -44,6 +45,17 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("All Tasks")
+            .toolbar {
+                Button {
+                    shouldShowFilterAndShowView.toggle()
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                }
+                .sheet(isPresented: $shouldShowFilterAndShowView) {
+                    FilteringAndSortingView()
+                }
+            }
+            
         }
     }
     

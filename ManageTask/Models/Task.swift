@@ -9,12 +9,14 @@ import Foundation
 import Combine
 import SwiftUI
 
-enum TaskPriority: Int {
+enum TaskPriority: Int, CaseIterable, Identifiable {
     case low, medium, high
     
     var description: String {
         "\(self)".capitalized
     }
+    
+    var id: Self { self }
 }
 
 enum TaskColorString: String, CaseIterable {
