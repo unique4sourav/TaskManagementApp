@@ -7,24 +7,33 @@
 
 import SwiftUI
 
+enum SortingOption: String, CaseIterable, Identifiable {
+    case nameAToZ = "Name(A-Z)"
+    case nameZToA = "Name(Z-A)"
+    case priorityHighToLow = "Priority(High-Low)"
+    case priorityLowToHigh = "Priority(Low-High)"
+    case dateAsAscending = "Date(Ascending)"
+    case dateAsDecending = "Date(Decending)"
+    
+    var id: Self { self }
+}
+
 struct FilteringAndSortingView: View {
     @Environment(\.dismiss) var dismiss
     @State var fromDate: Date = Date()
     @State var ToDate: Date = Date()
-    
+    @State var selectedSortingOption: SortingOption?
     
     
     var body: some View {
         NavigationStack {
-            List {
+            List(selection: $selectedSortingOption) {
                 Section("Sort by:") {
-                    Text("Name(A-Z)")
-                    Text("Name(Z-A)")
-                    Text("Priority(High-Low)")
-                    Text("Priority(Low-High)")
-                    Text("Date(Ascending)")
-                    Text("Date(Decending)")
+                    ForEach(SortingOption.allCases) { option in
+                        CheckMarkRow(text: option.rawValue, isSelected: selectedSortingOption == option)
+                    }
                 }
+                
                 
                 Section("Filter by:") {
                     Text("Due Date")
@@ -55,6 +64,7 @@ struct FilteringAndSortingView: View {
                 
                 
             }
+            
             .listStyle(.insetGrouped)
             .navigationTitle("Sorting & Filtering")
             .navigationBarTitleDisplayMode(.inline)

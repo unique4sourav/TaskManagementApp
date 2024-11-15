@@ -25,7 +25,7 @@ struct ManageTaskApp: App {
 
     var body: some Scene {
         WindowGroup {
-            FilteringAndSortingView()
+            HomeView()
         }
         .modelContainer(sharedModelContainer)
     }
