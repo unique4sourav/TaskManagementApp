@@ -10,21 +10,20 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     
-    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Task] {
+    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Binding<Task>] {
         switch completionStatus {
         case .overdue:
-            return viewModel.allTasks.filter{ $0.completionDate == nil && $0.dueDate < Date()}
+            return $viewModel.allTasks.filter{ $0.completionDate.wrappedValue == nil && $0.dueDate.wrappedValue < Date()}
             
         case .incomplete:
-            return viewModel.allTasks.filter{ $0.completionDate == nil && $0.dueDate > Date() }
+            return $viewModel.allTasks.filter{ $0.completionDate.wrappedValue == nil && $0.dueDate.wrappedValue > Date() }
             
         case .completed:
-            return viewModel.allTasks.filter{ $0.completionDate != nil }
+            return $viewModel.allTasks.filter{ $0.completionDate.wrappedValue != nil}
         }
         
     }
     
-    // TODO: update incomplete and complete list on toggling completeness
     var body: some View {
         NavigationStack {
             List {

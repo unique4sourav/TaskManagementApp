@@ -36,7 +36,7 @@ extension Color {
 
 struct TaskView: View {
     private let taskColor = Color(TaskColorString.allCases.randomElement())
-    @ObservedObject var task: Task
+    @Binding var task: Task
     
     var body: some View {
         VStack {
@@ -93,5 +93,5 @@ struct TaskView: View {
         priority: .high,
         notes: "Task Management App This app will help users manage their tasks effectively. Key Features: * Home Screen: Displays a list of tasks with options to filter by priorities or due dates. * Add/Edit Task Screen: Allows users to add or edit a task, specifying details like title, due date, priority, and notes. Implement data persistence to save tasks. * Task Details Screen: Shows detailed information about a selected task with options to mark it as complete or delete it.")
     
-    TaskView(task: task)
+    TaskView(task: .constant(task))
 }

@@ -18,13 +18,13 @@ enum TaskPriority: Int {
 }
 
 
-class Task: Identifiable, ObservableObject {
+struct Task: Identifiable {
     let id = UUID()
-    @Published var title: String
-    @Published var dueDate: Date
-    @Published var priority: TaskPriority
-    @Published var notes: String?
-    @Published private(set) var completionDate: Date? = nil
+    var title: String
+    var dueDate: Date
+    var priority: TaskPriority
+    var notes: String?
+    var completionDate: Date? = nil
     
     init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil, completionDate: Date? = nil) {
         self.title = title
@@ -34,7 +34,7 @@ class Task: Identifiable, ObservableObject {
         self.completionDate = completionDate
     }
     
-    func toggleCompleteness() {
+    mutating func toggleCompleteness() {
         if completionDate == nil {
             completionDate = Date()
         }
