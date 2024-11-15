@@ -9,32 +9,38 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
+    @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     
     var body: some View {
         NavigationStack {
-            List {
-                ForEach(TaskCompletionStatus.allCases, id: \.hashValue) { completionStatus in
-                    Section(completionStatus.rawValue) {
-                        ForEach(viewModel.tasksWithStatus(completionStatus)) { task in
-                            ZStack(alignment: .leading) {
-                                TaskView(task: task)
-                                NavigationLink {
-                                    EmptyView()
-                                } label: {
-                                    EmptyView()
-                                }
-                                .opacity(0)
+            VStack {
+                Picker("Task Completion Status",
+                       selection: $selectedTaskCompletionStatus) {
+                    ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
+                        Text(taskCompletionStatus.rawValue)
+                    }
+                }.pickerStyle(.segmented)
+                
+                
+                List {
+                    ForEach(viewModel.tasksWithStatus(selectedTaskCompletionStatus)) { task in
+                        ZStack(alignment: .leading) {
+                            TaskView(task: task)
+                            NavigationLink {
+                                EmptyView()
+                            } label: {
+                                EmptyView()
                             }
-                            .listRowSeparator(.hidden)
+                            .opacity(0)
                         }
-                        .listSectionSeparator(.visible)
+                        .listRowSeparator(.hidden)
                     }
                 }
-            }
-            .listStyle(.plain)
-            .onAppear {
-                if viewModel.allTasks.isEmpty {
-                    viewModel.fetchAllTasks()
+                .listStyle(.plain)
+                .onAppear {
+                    if viewModel.allTasks.isEmpty {
+                        viewModel.fetchAllTasks()
+                    }
                 }
             }
             .navigationTitle("All Tasks")

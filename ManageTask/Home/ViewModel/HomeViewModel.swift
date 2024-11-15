@@ -16,6 +16,14 @@ class HomeViewModel: ObservableObject {
     func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Binding<Task>] {
         
         switch completionStatus {
+        case .all:
+            return allTasks.indices.map { index in
+                Binding(
+                    get: { self.allTasks[index] },
+                    set: { self.allTasks[index] = $0 }
+                )
+            }
+            
         case .overdue:
             return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
                 .map { index in
