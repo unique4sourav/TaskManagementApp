@@ -44,6 +44,14 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("All Tasks")
+            .toolbar {
+                Button {
+                    // TODO: Open Sorting setting screen
+                } label: {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                }
+                
+            }
         }
     }
     
