@@ -6,10 +6,44 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
 
 
 class HomeViewModel: ObservableObject {
     @Published var allTasks: [Task] = []
+    
+    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Binding<Task>] {
+        
+        switch completionStatus {
+        case .overdue:
+            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
+                .map { index in
+                    Binding(
+                        get: { self.allTasks[index] },
+                        set: { self.allTasks[index] = $0 }
+                    )}
+            
+        case .incomplete:
+            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate > Date() }
+                .map { index in
+                    Binding(
+                        get: { self.allTasks[index] },
+                        set: { self.allTasks[index] = $0 }
+                    )}
+            
+        case .completed:
+            return allTasks.indices.filter { allTasks[$0].completionDate != nil }
+                .map { index in
+                    Binding(
+                        get: { self.allTasks[index] },
+                        set: { self.allTasks[index] = $0 }
+                    )}
+        }
+    }
+    
+    
+    
     
     func fetchAllTasks() {
         allTasks = [

@@ -7,35 +7,7 @@
 
 import SwiftUI
 
-
-enum TaskColorString: String, CaseIterable {
-    case red, orange, green, mint, teal, cyan, blue, indigo, purple, pink, brown
-}
-
-extension Color {
-    init?(_ taskColor: TaskColorString?) {
-        switch taskColor?.rawValue {
-        case "red": self = .red
-        case "orange": self = .orange
-        case "yellow": self = .yellow
-        case "green": self = .green
-        case "mint": self = .mint
-        case "teal": self = .teal
-        case "cyan": self = .cyan
-        case "blue": self = .blue
-        case "indigo": self = .indigo
-        case "purple": self = .purple
-        case "pink": self = .pink
-        case "brown": self = .brown
-        default: return nil
-        }
-    }
-}
-
-
-
 struct TaskView: View {
-    private let taskColor = Color(TaskColorString.allCases.randomElement())
     @Binding var task: Task
     
     var body: some View {
@@ -77,7 +49,7 @@ struct TaskView: View {
             }
             .padding(.all, 16)
             .background(
-                taskColor ?? .secondary,
+                task.taskColor ?? .secondary,
                 in: RoundedRectangle(cornerRadius: 8)
             )
             .padding(.horizontal, 0)
