@@ -4,7 +4,6 @@
 //
 //  Created by Sourav Santra on 15/11/24.
 //
-
 import SwiftUI
 
 extension Color {
@@ -25,4 +24,11 @@ extension Color {
         default: return nil
         }
     }
+    
+    init(rgbStruct rgb: RGB) {
+      self.init(red: rgb.red, green: rgb.green, blue: rgb.blue)
+    }
+
+    static let customHighlight = Color("Highlight")
+    static let customShadow = Color("Shadow")
 }

@@ -13,7 +13,7 @@ struct TaskView: View {
     var body: some View {
         VStack {
             HStack(spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(task.title)
                         .font(.headline)
                         .fontWeight(.bold)
@@ -27,14 +27,14 @@ struct TaskView: View {
                     .font(.subheadline)
                     
                 }
-                .foregroundStyle(.background)
+                .foregroundStyle(.white)
                 
                 
                 TaskCompletionIconView(
                     for: task.completionDate != nil ?
                         .completed : .incomplete,
                     foregroundColor: .white)
-                .frame(width: 24)
+                .frame(width: 20)
                 .onTapGesture {
                     task.toggleCompleteness()
                 }
@@ -49,11 +49,17 @@ struct TaskView: View {
             }
             .padding(.all, 16)
             .background(
-                task.taskColor ?? .secondary,
-                in: RoundedRectangle(cornerRadius: 8)
+              ZStack {
+                  RoundedRectangle(cornerRadius: 8)
+                      .fill(task.color ?? .secondary)
+                  .northWestShadow(radius: 3, offset: 1)
+                  RoundedRectangle(cornerRadius: 8)
+                  .inset(by: 2)
+                  .fill(task.color ?? .secondary)
+                  .southEastShadow(radius: 1, offset: 1)
+              }
             )
             .padding(.horizontal, 0)
-            
         }
     }
 }

@@ -29,7 +29,7 @@ struct Task: Identifiable {
     var priority: TaskPriority
     var notes: String?
     var completionDate: Date? = nil
-    let taskColor = Color(TaskColorString.allCases.randomElement())
+    let color = Color(TaskColorString.allCases.randomElement())
     
     init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil, completionDate: Date? = nil) {
         self.title = title
