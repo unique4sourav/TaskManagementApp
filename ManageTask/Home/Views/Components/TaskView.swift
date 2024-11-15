@@ -20,7 +20,7 @@ struct TaskView: View {
                         .lineLimit(1)
                     
                     HStack {
-                        Text("15th Nov")
+                        Text(task.dueDate.dateString)
                         Text("|")
                         Text(task.priority.description)
                     }
