@@ -13,13 +13,13 @@ struct HomeView: View {
     func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Task] {
         switch completionStatus {
         case .overdue:
-            return viewModel.allTasks.filter{ $0.isCompleted == false && $0.dueDate < Date()}
+            return viewModel.allTasks.filter{ $0.completionDate == nil && $0.dueDate < Date()}
             
         case .incomplete:
-            return viewModel.allTasks.filter{ $0.isCompleted == false && $0.dueDate > Date() }
+            return viewModel.allTasks.filter{ $0.completionDate == nil && $0.dueDate > Date() }
             
         case .completed:
-            return viewModel.allTasks.filter{ $0.isCompleted == true }
+            return viewModel.allTasks.filter{ $0.completionDate != nil }
         }
         
     }
@@ -48,7 +48,9 @@ struct HomeView: View {
             }
             .listStyle(.plain)
             .onAppear {
-                viewModel.fetchAllTasks()
+                if viewModel.allTasks.isEmpty {
+                    viewModel.fetchAllTasks()
+                }
             }
             .navigationTitle("All Tasks")
         }

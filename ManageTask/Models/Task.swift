@@ -24,26 +24,21 @@ class Task: Identifiable, ObservableObject {
     @Published var dueDate: Date
     @Published var priority: TaskPriority
     @Published var notes: String?
-    @Published private(set) var isCompleted: Bool = false
-    @Published var completionDate: Date? = nil
+    @Published private(set) var completionDate: Date? = nil
     
-    init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil,
-         isCompleted: Bool = false, completionDate: Date? = nil) {
+    init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil, completionDate: Date? = nil) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
         self.notes = notes
-        self.isCompleted = isCompleted
         self.completionDate = completionDate
     }
     
     func toggleCompleteness() {
-        if !isCompleted {
-            isCompleted = true
+        if completionDate == nil {
             completionDate = Date()
         }
         else {
-            isCompleted = false
             completionDate = nil
         }
     }

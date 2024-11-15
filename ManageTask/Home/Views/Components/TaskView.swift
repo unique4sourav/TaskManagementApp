@@ -59,7 +59,7 @@ struct TaskView: View {
                 
                 
                 TaskCompletionIconView(
-                    for: task.isCompleted ?
+                    for: task.completionDate != nil ?
                         .completed : .incomplete,
                     foregroundColor: .white)
                 .frame(width: 24)
