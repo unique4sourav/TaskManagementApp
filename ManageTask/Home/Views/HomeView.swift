@@ -10,7 +10,10 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
-    @State var shouldShowFilterAndShowView = false
+    @State var shouldShowAddNewTaskView = false
+    @State var shouldShowFilteringOptionView = false
+    @State var shouldShowSortingOptionView = false
+    
     
     var body: some View {
         NavigationStack {
@@ -46,13 +49,39 @@ struct HomeView: View {
             }
             .navigationTitle("All Tasks")
             .toolbar {
-                Button {
-                    shouldShowFilterAndShowView.toggle()
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        shouldShowAddNewTaskView.toggle()
+                    } label: {
+                        Text("Add New")
+                    }
+                    .sheet(isPresented: $shouldShowAddNewTaskView) {
+                        EmptyView()
+                    }
                 }
-                .sheet(isPresented: $shouldShowFilterAndShowView) {
-                    FilteringAndSortingView()
+                
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        shouldShowSortingOptionView.toggle()
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                    }
+                    .sheet(isPresented: $shouldShowSortingOptionView) {
+                        FilteringView()
+                    }
+                }
+                
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        shouldShowFilteringOptionView.toggle()
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down.circle")
+                    }
+                    .sheet(isPresented: $shouldShowFilteringOptionView) {
+                        SortingView()
+                    }
                 }
             }
             

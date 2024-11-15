@@ -18,55 +18,28 @@ enum SortingOption: String, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-struct FilteringAndSortingView: View {
+
+struct SortingView: View {
     @Environment(\.dismiss) var dismiss
     @State var fromDate: Date = Date()
     @State var ToDate: Date = Date()
     @State var selectedSortingOption: SortingOption?
+    @State var selectedFilteringOption: FilteringOption?
+    @State var selectedTaskPriority: PriorityOfTask = .high
     
     
     var body: some View {
         NavigationStack {
             List(selection: $selectedSortingOption) {
-                Section("Sort by:") {
+                Section("Sort by:".uppercased()) {
                     ForEach(SortingOption.allCases) { option in
-                        CheckMarkRow(text: option.rawValue, isSelected: selectedSortingOption == option)
+                        CheckMarkRow(text: option.rawValue,
+                                     isSelected: selectedSortingOption == option)
                     }
                 }
-                
-                
-                Section("Filter by:") {
-                    Text("Due Date")
-                    VStack {
-                        DatePicker("From", selection: $fromDate, displayedComponents: .date)
-                        DatePicker("To", selection: $fromDate, displayedComponents: .date)
-                    }
-                    
-                    Text("Completion Date")
-                    VStack {
-                        DatePicker("From", selection: $fromDate, displayedComponents: .date)
-                        DatePicker("To", selection: $fromDate, in: ...Date(), displayedComponents: .date)
-                    }
-                    
-                    HStack {
-                        Picker(selection: $fromDate) {
-                            ForEach(TaskPriority.allCases) { priority in
-                                Text(priority.description)
-                            }
-                        } label: {
-                            Text("Priority")
-                        }
-                        
-                        Text("Abcbjc")
-                    }
-                    
-                }
-                
-                
             }
-            
             .listStyle(.insetGrouped)
-            .navigationTitle("Sorting & Filtering")
+            .navigationTitle("Sort")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -90,5 +63,5 @@ struct FilteringAndSortingView: View {
 }
 
 #Preview {
-    FilteringAndSortingView()
+    SortingView()
 }
