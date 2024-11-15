@@ -12,10 +12,13 @@ enum TaskCompletionIcon {
     static let complete = Image(systemName: "checkmark.circle.fill")
 }
 
-enum TaskCompletionStatus: LocalizedStringKey, CaseIterable {
+enum TaskCompletionStatus: LocalizedStringKey, CaseIterable, Identifiable {
+    case all = "All"
     case overdue = "Overdue"
     case incomplete = "Incomplete"
     case completed = "Completed"
+    
+    var id: Self { self }
 }
 
 struct TaskCompletionIconView: View {
