@@ -76,7 +76,12 @@ struct HomeView: View {
                     Button {
                         shouldShowFilteringOptionView.toggle()
                     } label: {
-                        Image(systemName: "arrow.up.arrow.down.circle")
+                        ZStack {
+                            Image(systemName:
+                                    viewModel.selectedSortingOption != nil ?
+                                  "arrow.up.arrow.down.circle.fill" :
+                                    "arrow.up.arrow.down.circle")
+                        }
                     }
                     .sheet(isPresented: $shouldShowFilteringOptionView) {
                         SortingView(viewModel: viewModel)
@@ -91,4 +96,9 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+}
+
+
+extension HomeView {
+    
 }

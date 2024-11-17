@@ -28,6 +28,15 @@ struct SortingView: View {
     @State var selectedTaskPriority: PriorityOfTask = .high
     @ObservedObject var viewModel: HomeViewModel
     
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        let sortingOption = viewModel.selectedSortingOption
+        //                print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
+        //                print("selectedSortingOption: \(sortingOption)")
+        selectedSortingOption = sortingOption
+        //                print("selectedSortingOption after assignment: \(selectedSortingOption)")
+    }
+    
     
     var body: some View {
         NavigationStack {
@@ -40,11 +49,12 @@ struct SortingView: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Sort")
+            .navigationTitle("Sort Tasks")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("Cancel") {
+                        print("Cancelled filtering.")
                         dismiss()
                     }
                 }
@@ -52,10 +62,10 @@ struct SortingView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Apply") {
-                        // TODO: Apply the filtering and sorting
-                        DispatchQueue.main.asyncAfter(deadline: .now()+3, execute: {
-                            dismiss()
-                        })
+                        print("Sort tasks")
+                        viewModel.selectedSortingOption = selectedSortingOption
+                        //print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
+                        dismiss()
                     }
                 }
             }

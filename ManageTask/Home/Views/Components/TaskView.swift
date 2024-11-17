@@ -14,11 +14,14 @@ struct TaskView: View {
         VStack {
             HStack(spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(task.title)
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .lineLimit(1)
-                    
+                    HStack {
+                        Text(task.title)
+                            .font(.headline)
+                            .fontWeight(.bold)
+                            .lineLimit(1)
+                        
+                        Spacer()
+                    }
                     HStack {
                         Text(task.dueDate.dateString)
                         Text("|")
@@ -66,7 +69,7 @@ struct TaskView: View {
 
 #Preview {
     let task = Task(
-        title: "Complete the task management app. Complete the task management app.",
+        title: "Complete the task",
         dueDate: Date(),
         priority: .high,
         notes: "Task Management App This app will help users manage their tasks effectively. Key Features: * Home Screen: Displays a list of tasks with options to filter by priorities or due dates. * Add/Edit Task Screen: Allows users to add or edit a task, specifying details like title, due date, priority, and notes. Implement data persistence to save tasks. * Task Details Screen: Shows detailed information about a selected task with options to mark it as complete or delete it.")
