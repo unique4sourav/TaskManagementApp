@@ -40,34 +40,14 @@ struct SortingView: View {
     
     var body: some View {
         NavigationStack {
-            List(selection: $selectedSortingOption) {
-                Section("Sort by:".uppercased()) {
-                    ForEach(SortingOption.allCases) { option in
-                        CheckMarkRow(text: option.rawValue,
-                                     isSelected: selectedSortingOption == option)
-                    }
-                }
-            }
+            sortingOptionList
             .listStyle(.insetGrouped)
             .navigationTitle("Sort Tasks")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        print("Cancelled filtering.")
-                        dismiss()
-                    }
-                }
+                cancelToolBarItem
                 
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Apply") {
-                        print("Sort tasks")
-                        viewModel.selectedSortingOption = selectedSortingOption
-                        //print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
-                        dismiss()
-                    }
-                }
+                applyToolBarItem
             }
         }
     }
@@ -75,4 +55,38 @@ struct SortingView: View {
 
 #Preview {
     SortingView(viewModel: HomeViewModel())
+}
+
+
+extension SortingView {
+    private var sortingOptionList: some View {
+        List(selection: $selectedSortingOption) {
+            Section("Sort by:".uppercased()) {
+                ForEach(SortingOption.allCases) { option in
+                    CheckMarkRow(text: option.rawValue,
+                                 isSelected: selectedSortingOption == option)
+                }
+            }
+        }
+    }
+    
+    private var cancelToolBarItem: ToolbarItem<(), some View> {
+        ToolbarItem(placement: .topBarLeading) {
+            Button("Cancel") {
+                print("Cancelled filtering.")
+                dismiss()
+            }
+        }
+    }
+    
+    private var applyToolBarItem: ToolbarItem<(), some View> {
+        ToolbarItem(placement: .topBarTrailing) {
+            Button("Apply") {
+                print("Sort tasks")
+                viewModel.selectedSortingOption = selectedSortingOption
+                //print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
+                dismiss()
+            }
+        }
+    }
 }
