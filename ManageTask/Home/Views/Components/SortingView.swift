@@ -10,11 +10,11 @@ import SwiftUI
 enum SortingOption: String, CaseIterable, Identifiable {
     case nameAToZ = "Name(A-Z)"
     case nameZToA = "Name(Z-A)"
-    case priorityHighToLow = "Priority(High-Low)"
     case priorityLowToHigh = "Priority(Low-High)"
-    case dateAsAscending = "Date(Ascending)"
-    case dateAsDecending = "Date(Decending)"
-    
+    case priorityHighToLow = "Priority(High-Low)"
+    case dueDateAsAscending = "Due Date(Ascending)"
+    case dueDateAsDecending = "Due Date(Decending)"
+    // TODO: think if we can add completion date as well
     var id: Self { self }
 }
 
@@ -26,6 +26,7 @@ struct SortingView: View {
     @State var selectedSortingOption: SortingOption?
     @State var selectedFilteringOption: FilteringOption?
     @State var selectedTaskPriority: PriorityOfTask = .high
+    @ObservedObject var viewModel: HomeViewModel
     
     
     var body: some View {
@@ -63,5 +64,5 @@ struct SortingView: View {
 }
 
 #Preview {
-    SortingView()
+    SortingView(viewModel: HomeViewModel())
 }

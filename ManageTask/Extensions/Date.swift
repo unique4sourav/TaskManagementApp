@@ -1,5 +1,5 @@
 //
-//  Date+Extension.swift
+//  Date.swift
 //  ManageTask
 //
 //  Created by Sourav Santra on 15/11/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Date {
+extension Date: Comparable {
     var dateString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium

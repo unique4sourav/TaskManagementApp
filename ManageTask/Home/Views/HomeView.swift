@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
-    @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     @State var shouldShowAddNewTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
@@ -19,7 +18,7 @@ struct HomeView: View {
         NavigationStack {
             VStack {
                 Picker("Task Completion Status",
-                       selection: $selectedTaskCompletionStatus) {
+                       selection: $viewModel.selectedTaskCompletionStatus) {
                     ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
                         Text(taskCompletionStatus.rawValue)
                     }
@@ -27,7 +26,7 @@ struct HomeView: View {
                 
                 
                 List {
-                    ForEach(viewModel.tasksWithStatus(selectedTaskCompletionStatus)) { task in
+                    ForEach($viewModel.refinedTasks) { task in
                         ZStack(alignment: .leading) {
                             TaskView(task: task)
                             NavigationLink {
@@ -42,7 +41,7 @@ struct HomeView: View {
                 }
                 .listStyle(.plain)
                 .onAppear {
-                    if viewModel.allTasks.isEmpty {
+                    if viewModel.refinedTasks.isEmpty {
                         viewModel.fetchAllTasks()
                     }
                 }
@@ -68,7 +67,7 @@ struct HomeView: View {
                         Image(systemName: "line.3.horizontal.decrease.circle")
                     }
                     .sheet(isPresented: $shouldShowSortingOptionView) {
-                        FilteringView()
+                        FilteringView(viewModel: viewModel)
                     }
                 }
                 
@@ -80,7 +79,7 @@ struct HomeView: View {
                         Image(systemName: "arrow.up.arrow.down.circle")
                     }
                     .sheet(isPresented: $shouldShowFilteringOptionView) {
-                        SortingView()
+                        SortingView(viewModel: viewModel)
                     }
                 }
             }

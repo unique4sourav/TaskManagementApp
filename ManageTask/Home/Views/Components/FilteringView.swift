@@ -24,6 +24,7 @@ struct FilteringView: View {
     @State var selectedSortingOption: SortingOption?
     @State var selectedFilteringOption: FilteringOption?
     @State var selectedTaskPriority: PriorityOfTask = .medium
+    @ObservedObject var viewModel: HomeViewModel
     
     
     var body: some View {
@@ -89,5 +90,5 @@ struct FilteringView: View {
     }
 }
 #Preview {
-    FilteringView()
+    FilteringView(viewModel: HomeViewModel())
 }

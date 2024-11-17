@@ -12,45 +12,77 @@ import SwiftUI
 
 class HomeViewModel: ObservableObject {
     @Published var allTasks: [Task] = []
+    @Published var refinedTasks: [Task] = []
+    @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
+    @Published var selectedSortingOption: SortingOption = .nameAToZ
     
-    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Binding<Task>] {
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        addSubscribers()
+    }
+    
+    
+    private func addSubscribers() {
+        $allTasks.combineLatest($selectedTaskCompletionStatus)
+            .map(filterTasksByCompletion)
+            .sink { [weak self] tasks in
+                guard let self else {return }
+                
+                self.refinedTasks = tasks
+            }
+            .store(in: &cancellables)
+    }
+    
+    
+    
+    private func filterTasksByCompletion(tasks allTasks: [Task], completionStatus: TaskCompletionStatus) -> [Task] {
+        guard !allTasks.isEmpty
+        else { return [] }
         
         switch completionStatus {
         case .all:
-            return allTasks.indices.map { index in
-                Binding(
-                    get: { self.allTasks[index] },
-                    set: { self.allTasks[index] = $0 }
-                )
-            }
+            //            print("number of all tasks before filtering: \(allTasks.count)")
+            return allTasks
             
         case .overdue:
-            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
-                .map { index in
-                    Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
+            //            print("number of overdue tasks before filtering: \(allTasks.count)")
+            let overdueTasks = allTasks
+                .filter { $0.completionDate == nil && $0.dueDate <= Date()}
+            //            print("number of overdue tasks after filtering: \(overdueTasks.count)")
+            return overdueTasks
             
         case .incomplete:
-            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate > Date() }
-                .map { index in
-                    Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
+            //            print("number of incomplete tasks before filtering: \(allTasks.count)")
+            let incompleteTasks = allTasks
+                .filter { $0.completionDate == nil && $0.dueDate > Date()}
+            //            print("number of incomplete tasks after filtering: \(incompleteTasks.count)")
+            return incompleteTasks
             
         case .completed:
-            return allTasks.indices.filter { allTasks[$0].completionDate != nil }
-                .map { index in
-                    Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
+            //            print("number of completed tasks before filtering: \(allTasks.count)")
+            let completedTasks = allTasks.filter { $0.completionDate != nil}
+            //            print("number of completed tasks before filtering: \(completedTasks.count)")
+            return completedTasks
         }
     }
     
     
+    
+    func sort(tasks: [Task], by sortingOption: SortingOption = .nameAToZ) -> [Task] {
+        switch sortingOption {
+        case .dueDateAsAscending:
+            return tasks.sorted(by: { $0.dueDate < $1.dueDate })
+            
+        default:
+            print("Default switch case.")
+        }
+        
+        
+        
+        
+        return []
+    }
     
     
     func fetchAllTasks() {
