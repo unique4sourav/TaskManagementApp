@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskView: View {
-    @Binding var task: Task
+    @Binding var task: TaskModel
     
     var body: some View {
         VStack {
@@ -65,7 +65,7 @@ struct TaskView: View {
 }
 
 #Preview {
-    let task = Task(
+    let task = TaskModel(
         title: "Complete the task management app. Complete the task management app.",
         dueDate: Date(),
         priority: .high,
