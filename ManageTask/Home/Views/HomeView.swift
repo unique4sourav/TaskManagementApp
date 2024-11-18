@@ -21,13 +21,7 @@ struct HomeView: View {
                 
                 taskList
                     .listStyle(.plain)
-                    .onAppear {
-                        if viewModel.refinedTasks.isEmpty {
-                            viewModel.fetchAllTasks()
-                        }
-                    }
             }
-            //.overlay(alignment: .bottomTrailing) { addNewTaskCustomButton }
             .navigationTitle("All Tasks")
             .toolbar {
                 addNewTaskToolBarItem
