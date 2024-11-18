@@ -13,13 +13,20 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var allTasks: [TaskModel] = []
     @Published var selectedSortingOption: SortingOption = .nameAToZ
+    @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     
-    func tasksWithStatus(_ completionStatus: TaskCompletionStatus) -> [Binding<TaskModel>] {
+    private let dataService = TaskDataService()
+    
+    func getTasksAsPerCompletionStatus() -> [Binding<TaskModel>] {
         
-        switch completionStatus {
+        switch selectedTaskCompletionStatus {
         case .all:
-            return allTasks.indices.map { index in
-                Binding(
+            return allTasks.indices
+                .sorted(by: sortBySelectedOption)
+                .compactMap { [weak self] index in
+                    guard let self else { return nil }
+                    
+                return Binding(
                     get: { self.allTasks[index] },
                     set: { self.allTasks[index] = $0 }
                 )
@@ -27,34 +34,55 @@ class HomeViewModel: ObservableObject {
             
         case .overdue:
             return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
-                .sorted(by: { index1, index2 in
-                    allTasks[index1].title > allTasks[index2].title
-                })
-                .map { index in
-                    Binding(
+                .sorted(by: sortBySelectedOption)
+                .compactMap { [weak self] index in
+                    guard let self else { return nil }
+                    
+                return Binding(
                         get: { self.allTasks[index] },
                         set: { self.allTasks[index] = $0 }
                     )}
             
         case .incomplete:
             return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate > Date() }
-                .map { index in
-                    Binding(
+                .sorted(by: sortBySelectedOption)
+                .compactMap { [weak self] index in
+                    guard let self else { return nil }
+                    
+                return Binding(
                         get: { self.allTasks[index] },
                         set: { self.allTasks[index] = $0 }
                     )}
             
         case .completed:
             return allTasks.indices.filter { allTasks[$0].completionDate != nil }
-                .map { index in
-                    Binding(
+                .sorted(by: sortBySelectedOption)
+                .compactMap { [weak self] index in
+                    guard let self else { return nil }
+                    
+                return Binding(
                         get: { self.allTasks[index] },
                         set: { self.allTasks[index] = $0 }
                     )}
         }
     }
     
-    
+    func sortBySelectedOption(firstIndex: Int, secondIndex: Int) -> Bool {
+        switch selectedSortingOption {
+        case .nameAToZ:
+            return allTasks[firstIndex].title < allTasks[secondIndex].title
+        case .nameZToA:
+            return allTasks[firstIndex].title > allTasks[secondIndex].title
+        case .priorityLowToHigh:
+            return allTasks[firstIndex].priority.rawValue < allTasks[secondIndex].priority.rawValue
+        case .priorityHighToLow:
+            return allTasks[firstIndex].priority.rawValue > allTasks[secondIndex].priority.rawValue
+        case .dueDateAsAscending:
+            return allTasks[firstIndex].dueDate < allTasks[secondIndex].dueDate
+        case .dueDateAsDecending:
+            return allTasks[firstIndex].dueDate > allTasks[secondIndex].dueDate
+        }
+    }
     
     
     func fetchAllTasks() {

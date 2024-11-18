@@ -12,7 +12,7 @@ struct HomeView: View {
     @State var shouldShowAddNewTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
-    @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
+    
     
     var body: some View {
         NavigationStack {
@@ -50,7 +50,7 @@ struct HomeView: View {
 extension HomeView {
     private var taskCompletionSegment: some View {
         Picker("Task Completion Status",
-               selection: $selectedTaskCompletionStatus) {
+               selection: $viewModel.selectedTaskCompletionStatus) {
             ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
                 Text(taskCompletionStatus.rawValue)
             }
@@ -61,7 +61,7 @@ extension HomeView {
     
     private var taskList: some View {
         List {
-            ForEach(viewModel.tasksWithStatus(selectedTaskCompletionStatus)) { task in
+            ForEach(viewModel.getTasksAsPerCompletionStatus()) { task in
                 ZStack(alignment: .leading) {
                     TaskView(task: task)
                     NavigationLink {

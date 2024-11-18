@@ -10,7 +10,7 @@ import Combine
 import SwiftUI
 
 class TaskDataService {
-    @Published var allTasks: [Binding<TaskModel>] = []
+    @Published var allTasks: [TaskModel] = []
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -18,7 +18,7 @@ class TaskDataService {
     }
     
     private func getTasks() {
-        var dummyTasks =
+        allTasks =
         [
             TaskModel(
                 title: "Prepare Meeting Agenda",
@@ -181,13 +181,13 @@ class TaskDataService {
             
         ]
         
-        let bindingTasks = dummyTasks.indices.map { index in
-            Binding(
-                get: { dummyTasks[index] },
-                set : { dummyTasks[index] = $0 }
-            )
-        }
-        
-        self.allTasks = bindingTasks
+//        let bindingTasks = dummyTasks.indices.map { index in
+//            Binding(
+//                get: { dummyTasks[index] },
+//                set : { dummyTasks[index] = $0 }
+//            )
+//        }
+//        
+//        self.allTasks = bindingTasks
     }
 }
