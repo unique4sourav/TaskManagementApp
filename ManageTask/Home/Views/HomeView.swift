@@ -12,7 +12,7 @@ struct HomeView: View {
     @State var shouldShowAddNewTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
-    
+    @State var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     
     var body: some View {
         NavigationStack {
@@ -21,6 +21,11 @@ struct HomeView: View {
                 
                 taskList
                     .listStyle(.plain)
+                    .onAppear {
+                        if viewModel.allTasks.isEmpty {
+                            viewModel.fetchAllTasks()
+                        }
+                    }
             }
             .navigationTitle("All Tasks")
             .toolbar {
@@ -45,7 +50,7 @@ struct HomeView: View {
 extension HomeView {
     private var taskCompletionSegment: some View {
         Picker("Task Completion Status",
-               selection: $viewModel.selectedTaskCompletionStatus) {
+               selection: $selectedTaskCompletionStatus) {
             ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
                 Text(taskCompletionStatus.rawValue)
             }
@@ -56,9 +61,9 @@ extension HomeView {
     
     private var taskList: some View {
         List {
-            ForEach($viewModel.bindingTasks) { task in
+            ForEach(viewModel.tasksWithStatus(selectedTaskCompletionStatus)) { task in
                 ZStack(alignment: .leading) {
-                    TaskView(task: task.wrappedValue, viewModel: viewModel)
+                    TaskView(task: task)
                     NavigationLink {
                         EmptyView()
                     } label: {
@@ -111,8 +116,8 @@ extension HomeView {
             } label: {
                 ZStack {
                     Image(systemName: "arrow.up.arrow.down.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                 }
             }
             .sheet(isPresented: $shouldShowFilteringOptionView) {
