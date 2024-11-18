@@ -24,7 +24,7 @@ enum TaskColorString: String, CaseIterable {
 }
 
 
-struct Task: Identifiable {
+struct TaskModel: Identifiable {
     let id = UUID()
     var title: String
     var dueDate: Date
