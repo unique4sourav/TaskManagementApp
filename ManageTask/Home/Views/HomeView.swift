@@ -21,11 +21,11 @@ struct HomeView: View {
                 
                 taskList
                     .listStyle(.plain)
-                    .onAppear {
-                        if viewModel.allTasks.isEmpty {
-                            viewModel.fetchAllTasks()
-                        }
-                    }
+//                    .onAppear {
+//                        if viewModel.allTasks.isEmpty {
+//                            viewModel.fetchAllTasks()
+//                        }
+//                    }
             }
             .navigationTitle("All Tasks")
             .toolbar {

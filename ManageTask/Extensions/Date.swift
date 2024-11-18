@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Date: Comparable {
+extension Date {
     var dateString: String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
