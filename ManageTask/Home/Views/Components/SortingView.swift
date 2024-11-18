@@ -30,11 +30,7 @@ struct SortingView: View {
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        let sortingOption = viewModel.selectedSortingOption
-        //                print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
-        //                print("selectedSortingOption: \(sortingOption)")
-        selectedSortingOption = sortingOption
-        //                print("selectedSortingOption after assignment: \(selectedSortingOption)")
+        _selectedSortingOption = State(initialValue: viewModel.selectedSortingOption)
     }
     
     
@@ -83,9 +79,10 @@ extension SortingView {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Apply") {
                 print("Sort tasks")
-                viewModel.selectedSortingOption = selectedSortingOption
-                //print("viewModel.selectedSortingOption: \(viewModel.selectedSortingOption)")
-                dismiss()
+                if let selectedSortingOption {
+                    viewModel.selectedSortingOption = selectedSortingOption
+                    dismiss()
+                }
             }
         }
     }

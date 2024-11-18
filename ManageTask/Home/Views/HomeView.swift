@@ -116,10 +116,7 @@ extension HomeView {
                 shouldShowFilteringOptionView.toggle()
             } label: {
                 ZStack {
-                    Image(systemName:
-                            viewModel.selectedSortingOption != nil ?
-                          "arrow.up.arrow.down.circle.fill" :
-                            "arrow.up.arrow.down.circle")
+                    Image(systemName: "arrow.up.arrow.down.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                 }

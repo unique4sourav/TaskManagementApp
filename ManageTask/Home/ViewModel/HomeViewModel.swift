@@ -14,7 +14,7 @@ class HomeViewModel: ObservableObject {
     @Published var allTasks: [Task] = []
     @Published var refinedTasks: [Task] = []
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
-    @Published var selectedSortingOption: SortingOption?
+    @Published var selectedSortingOption: SortingOption = .nameAToZ
     
     private var cancellables = Set<AnyCancellable>()
     

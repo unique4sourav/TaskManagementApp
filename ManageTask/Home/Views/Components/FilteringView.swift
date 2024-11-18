@@ -64,7 +64,8 @@ extension FilteringView {
                         
                     case .completionDate:
                         VStack {
-                            CheckMarkRow(text: option.rawValue, isSelected: selectedFilteringOption == option)
+                            CheckMarkRow(text: option.rawValue,
+                                         isSelected: selectedFilteringOption == option)
                             DatePicker("From", selection: $fromCompletionDate, displayedComponents: .date)
                             DatePicker("To", selection: $toCompletionDate, displayedComponents: .date)
                         }
@@ -72,7 +73,8 @@ extension FilteringView {
                         
                     case .priority:
                         VStack {
-                            CheckMarkRow(text: option.rawValue, isSelected: selectedFilteringOption == option)
+                            CheckMarkRow(text: option.rawValue,
+                                         isSelected: selectedFilteringOption == option)
                             Picker("", selection: $selectedTaskPriority) {
                                 ForEach(PriorityOfTask.allCases, id: \.self) { priority in
                                     Text(priority.description)

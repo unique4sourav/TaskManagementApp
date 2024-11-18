@@ -31,5 +31,5 @@ struct CheckMarkRow: View {
 }
 
 #Preview {
-    CheckMarkRow(text: "Name(A-Z)", isSelected: true)
+    CheckMarkRow(text: "Name(A-Z)", isSelected: false)
 }
