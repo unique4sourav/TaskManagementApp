@@ -42,6 +42,7 @@ struct TaskModel: Identifiable {
     }
     
     mutating func toggleCompleteness() {
+        print("toggleCompleteness() is called")
         if completionDate == nil {
             completionDate = Date()
         }

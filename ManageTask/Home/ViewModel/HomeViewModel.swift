@@ -16,6 +16,8 @@ class HomeViewModel: ObservableObject {
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     @Published var selectedSortingOption: SortingOption = .nameAToZ
     
+    @Published var bindingTasks: [Binding<TaskModel>] = []
+    
     private var cancellables = Set<AnyCancellable>()
     private let dataService = TaskDataService()
     
@@ -25,16 +27,92 @@ class HomeViewModel: ObservableObject {
     }
     
     
+    func toggleCompleteness(for task: TaskModel) {
+        print("toggleCompleteness(for task: TaskModel) is called.")
+        let correspondingTask = bindingTasks.first { bindingTask in
+            bindingTask.wrappedValue.id == task.id
+        }
+        if correspondingTask?.wrappedValue.completionDate == nil {
+            correspondingTask?.wrappedValue.completionDate = Date()
+        }
+        else {
+            correspondingTask?.wrappedValue.completionDate = nil
+        }
+        ObjectWillChangePublisher().send()
+    }
+    
     private func addSubscribers() {
-        dataService.$allTasks
-            .combineLatest($selectedTaskCompletionStatus, $selectedSortingOption)
-            .map(categoriseTasksByCompletionAndSort)
-            .sink { [weak self] tasks in
-                guard let self else {return }
+        $selectedTaskCompletionStatus
+            .sink { [weak self] taskCompletionStatus in
+                guard let self else { return }
                 
-                self.refinedTasks = tasks
+                switch taskCompletionStatus {
+                case .all:
+                    self.bindingTasks = self.dataService.allTasks
+                    
+                case .overdue:
+                    self.bindingTasks = self.dataService.allTasks.filter { bindingTask in
+                        bindingTask.completionDate.wrappedValue == nil &&
+                        bindingTask.dueDate.wrappedValue < Date()
+                    }
+                    
+                case .incomplete:
+                    self.bindingTasks = self.dataService.allTasks.filter { bindingTask in
+                        bindingTask.completionDate.wrappedValue == nil &&
+                        bindingTask.dueDate.wrappedValue > Date()
+                    }
+                    
+                case .completed:
+                    self.bindingTasks = self.dataService.allTasks.filter { bindingTask in
+                        bindingTask.completionDate.wrappedValue != nil
+                    }
+                }
             }
             .store(in: &cancellables)
+        
+        
+        
+//        $selectedTaskCompletionStatus
+//            .combineLatest($bindingTasks)
+//            .sink { [weak self] completionStatus, bindingTasks in
+//                guard let self else { return }
+//                
+//                switch completionStatus {
+//                case .all:
+//                    self.bindingTasks = bindingTasks
+//                    
+//                case .overdue:
+//                    self.bindingTasks = bindingTasks.filter { bindingTask in
+//                        bindingTask.completionDate.wrappedValue == nil &&
+//                        bindingTask.dueDate.wrappedValue < Date()
+//                    }
+//                    
+//                case .incomplete:
+//                    self.bindingTasks = bindingTasks.filter { bindingTask in
+//                        bindingTask.completionDate.wrappedValue == nil &&
+//                        bindingTask.dueDate.wrappedValue > Date()
+//                    }
+//                    
+//                case .completed:
+//                    self.bindingTasks = bindingTasks.filter { bindingTask in
+//                        bindingTask.completionDate.wrappedValue != nil
+//                    }
+//                }
+//            }
+//            .store(in: &cancellables)
+        
+        
+        
+        
+//        dataService.$allTasks
+//            .combineLatest($selectedTaskCompletionStatus, $selectedSortingOption)
+//            .map(categoriseTasksByCompletionAndSort)
+//            .sink { [weak self] tasks in
+//                guard let self else {return }
+//                
+//                self.refinedTasks = tasks
+//            }
+//            .store(in: &cancellables)
     }
     
     private func categoriseTasksByCompletionAndSort(

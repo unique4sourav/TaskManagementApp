@@ -7,9 +7,10 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class TaskDataService {
-    @Published var allTasks: [TaskModel] = []
+    @Published var allTasks: [Binding<TaskModel>] = []
     private var cancellables = Set<AnyCancellable>()
     
     init() {
@@ -17,7 +18,7 @@ class TaskDataService {
     }
     
     private func getTasks() {
-        allTasks =
+        var dummyTasks =
         [
             TaskModel(
                 title: "Prepare Meeting Agenda",
@@ -179,5 +180,14 @@ class TaskDataService {
                 notes: "Task Management App This app will help users manage their tasks effectively. Key Features: * Home Screen: Displays a list of tasks with options to filter by priorities or due dates. * Add/Edit Task Screen: Allows users to add or edit a task, specifying details like title, due date, priority, and notes. Implement data persistence to save tasks. * Task Details Screen: Shows detailed information about a selected task with options to mark it as complete or delete it."),
             
         ]
+        
+        let bindingTasks = dummyTasks.indices.map { index in
+            Binding(
+                get: { dummyTasks[index] },
+                set : { dummyTasks[index] = $0 }
+            )
+        }
+        
+        self.allTasks = bindingTasks
     }
 }

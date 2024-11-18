@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 struct TaskView: View {
     @Binding var task: TaskModel
+    @ObservedObject var viewModel: HomeViewModel
+    
     
     var body: some View {
         VStack {
@@ -39,7 +42,8 @@ struct TaskView: View {
                     foregroundColor: .white)
                 .frame(width: 20)
                 .onTapGesture {
-                    task.toggleCompleteness()
+                    //task.toggleCompleteness()
+                    viewModel.toggleCompleteness(for: task)
                 }
                 
                 
@@ -74,5 +78,5 @@ struct TaskView: View {
         priority: .high,
         notes: "Task Management App This app will help users manage their tasks effectively. Key Features: * Home Screen: Displays a list of tasks with options to filter by priorities or due dates. * Add/Edit Task Screen: Allows users to add or edit a task, specifying details like title, due date, priority, and notes. Implement data persistence to save tasks. * Task Details Screen: Shows detailed information about a selected task with options to mark it as complete or delete it.")
     
-    TaskView(task: .constant(task))
+    TaskView(task: .constant(task), viewModel: HomeViewModel())
 }

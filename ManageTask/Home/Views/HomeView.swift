@@ -56,9 +56,9 @@ extension HomeView {
     
     private var taskList: some View {
         List {
-            ForEach($viewModel.refinedTasks) { task in
+            ForEach($viewModel.bindingTasks) { task in
                 ZStack(alignment: .leading) {
-                    TaskView(task: task)
+                    TaskView(task: task.wrappedValue, viewModel: viewModel)
                     NavigationLink {
                         EmptyView()
                     } label: {
