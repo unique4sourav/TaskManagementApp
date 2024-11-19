@@ -7,6 +7,169 @@
 
 import SwiftUI
 
+
+extension Date {
+    static var nilValue: Date? {
+        return nil
+    }
+}
+
+
+extension PriorityOfTask {
+    static var nilValue: PriorityOfTask? {
+        return nil
+    }
+}
+
+
+enum FilteringOptionV2 {
+    case dueDate(Date, Date)
+    case completionDate(Date, Date)
+    case priority(PriorityOfTask)
+    
+}
+
+
+extension FilteringOptionV2: RawRepresentable, CaseIterable, Identifiable, Hashable {
+    var id: UUID {
+        UUID()
+    }
+    
+    static var allCases: [FilteringOptionV2] = [
+        FilteringOptionV2.dueDate(Date(timeIntervalSinceReferenceDate: 0), Date()),
+        FilteringOptionV2.completionDate(Date(timeIntervalSinceReferenceDate: 0), Date()),
+        FilteringOptionV2.priority(.medium)
+    ]
+
+    
+    public init?(rawValue: String) {
+        switch rawValue {
+        case "Due Date":
+            self = .dueDate(Date(timeIntervalSinceReferenceDate: 0), Date())
+            
+        case "Completion Date":
+            self = .completionDate(Date(timeIntervalSinceReferenceDate: 0), Date())
+            
+        case "Priority":
+            self = .priority(PriorityOfTask.medium)
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var rawValue: String {
+        switch self {
+        case .dueDate:
+            return "Due Date"
+            
+        case .completionDate:
+            return "Completion Date"
+            
+        case .priority:
+            return "Priority"
+        }
+    }
+
+}
+
+
+extension FilteringView {
+    private var filteringOptionListV2: some View {
+        VStack {
+            List(selection: $selectedFilteringOptionV2) {
+                Section("Filter by V2:".uppercased()) {
+                    ForEach(FilteringOptionV2.allCases) { option in
+                        switch option {
+                        case .dueDate(var fromDate, var toDate):
+                            VStack {
+                                
+                                DatePicker("From",
+                                           selection: Binding<Date>(
+                                            get: { fromDate },
+                                            set: { fromDate = $0 } ),
+                                           displayedComponents: .date)
+                                
+                                DatePicker("To",
+                                           selection: Binding<Date>(
+                                            get: { toDate },
+                                            set: { toDate = $0 } ),
+                                           displayedComponents: .date)
+                            }
+                            
+                        default:
+                            Text("")
+                        }
+                    }
+                }
+            }
+            
+            Spacer()
+            
+            Button("Print") {
+                print("selectedFilteringOptionV2: \(String(describing: selectedFilteringOptionV2))")
+            }
+        }
+    }
+}
+
+
+//extension FilteringOptionV2: RawRepresentable {
+//    public init?(rawValue: String) {
+//        switch rawValue {
+//        case "Due Date":
+//            self = .dueDate(nilDate, nilDate)
+//            
+//        case "Completion Date":
+//            self = .completionDate(nilDate, nilDate)
+//            
+//        case "Priority":
+//            self = .priority(nilPriority)
+//            
+//        default:
+//            return nil
+//        }
+//    }
+//    
+//    public var rawValue: String {
+//        switch self {
+//        case .dueDate:
+//            return "Due Date"
+//            
+//        case .completionDate:
+//            return "Completion Date"
+//            
+//        case .priority:
+//            return "Priority"
+//        }
+//    }
+//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 enum FilteringOption: String, CaseIterable, Identifiable {
     case dueDate = "Due Date"
     case completionDate = "Completion Date"
@@ -23,20 +186,27 @@ struct FilteringView: View {
     @State var toCompletionDate: Date = Date()
     @State var selectedSortingOption: SortingOption?
     @State var selectedFilteringOption: FilteringOption?
+    @State var selectedFilteringOptionV2: FilteringOptionV2? =
+        .dueDate(Date(timeIntervalSinceReferenceDate: 0), Date())
     @State var selectedTaskPriority: PriorityOfTask = .medium
     @ObservedObject var viewModel: HomeViewModel
     
     
     var body: some View {
         NavigationStack {
-            filteringOptionList
-            .listStyle(.insetGrouped)
-            .navigationTitle("Filter Tasks")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                cancelToolBarItem
+            VStack {
                 
-                applyToolBarItem
+                filteringOptionListV2
+                
+                filteringOptionList
+                .listStyle(.insetGrouped)
+                .navigationTitle("Filter Tasks")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    cancelToolBarItem
+                    
+                    applyToolBarItem
+                }
             }
         }
     }
