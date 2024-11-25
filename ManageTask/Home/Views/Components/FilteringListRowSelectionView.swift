@@ -38,7 +38,8 @@ struct FilteringListRowSelectionView<Content: View>: View {
         .onTapGesture {
             print("Inside tap gesture before assinment")
             print("locallySelectedFilter = \(String(describing: locallySelectedFilter))")
-            if locallySelectedFilter != nil {
+            if locallySelectedFilter != nil,
+               locallySelectedFilter!.type == filterOption.type {
                 locallySelectedFilter = nil
             }
             else {
