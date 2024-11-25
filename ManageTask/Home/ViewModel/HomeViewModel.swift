@@ -44,6 +44,7 @@ class HomeViewModel: ObservableObject {
         switch selectedTaskCompletionStatus {
         case .all:
             return allTasks.indices
+                .filter(filterTasksBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
                     guard let self else { return nil }
@@ -56,6 +57,7 @@ class HomeViewModel: ObservableObject {
             
         case .overdue:
             return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
+                .filter(filterTasksBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
                     guard let self else { return nil }
@@ -67,6 +69,7 @@ class HomeViewModel: ObservableObject {
             
         case .incomplete:
             return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate > Date() }
+                .filter(filterTasksBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
                     guard let self else { return nil }
@@ -78,6 +81,7 @@ class HomeViewModel: ObservableObject {
             
         case .completed:
             return allTasks.indices.filter { allTasks[$0].completionDate != nil }
+                .filter(filterTasksBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
                     guard let self else { return nil }
@@ -111,7 +115,26 @@ class HomeViewModel: ObservableObject {
     
     
     
-    
+    private func filterTasksBySelectedFilter(index: Int) -> Bool {
+            if selectedFilterOption != nil {
+                switch selectedFilterOption!.type {
+                case .dueDate:
+                    return (selectedFilterOption!.fromDate >= allTasks[index].dueDate) &&
+                    (selectedFilterOption!.toDate <= allTasks[index].dueDate)
+                    
+                case .completionDate:
+                    return allTasks[index].completionDate != nil &&
+                    (selectedFilterOption!.fromDate >= allTasks[index].completionDate!) &&
+                    (selectedFilterOption!.toDate <= allTasks[index].completionDate!)
+                    
+                case .priority:
+                    return allTasks[index].priority == selectedFilterOption!.priority
+                }
+            }
+            else {
+                return true
+            }
+    }
     
     
     

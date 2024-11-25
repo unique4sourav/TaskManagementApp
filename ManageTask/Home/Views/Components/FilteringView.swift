@@ -128,6 +128,7 @@ extension FilteringView {
                 
                 print("Before applying filter")
                 print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
+                dismiss()
             }
         }
     }
