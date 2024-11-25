@@ -132,8 +132,8 @@ struct FilterListRowDateView: View {
     
     var body: some View {
         VStack {
-            DatePicker("From", selection: $fromDate, displayedComponents: .date)
-            DatePicker("To", selection: $toDate, displayedComponents: .date)
+            DatePicker("From", selection: $fromDate, in: ...toDate, displayedComponents: .date)
+            DatePicker("To", selection: $toDate, in: fromDate..., displayedComponents: .date)
         }
     }
 }
