@@ -7,26 +7,10 @@
 
 import SwiftUI
 
-//enum FilteringOption: String, CaseIterable, Identifiable {
-//    case dueDate = "Due Date"
-//    case completionDate = "Completion Date"
-//    case priority = "Priority"
-//
-//    var id: Self { self }
-//}
-
 struct FilteringView: View {
     @Environment(\.dismiss) var dismiss
-    //@State var fromDueDate: Date = Date(timeIntervalSinceReferenceDate: 0)
-    //@State var toDueDate: Date = Date()
-    //@State var fromCompletionDate: Date = Date(timeIntervalSinceReferenceDate: 0)
-    //@State var toCompletionDate: Date = Date()
-    //@State var selectedSortingOption: SortingOption?
-    //@State var selectedFilteringOption: FilteringOption?
-    //@State var selectedTaskPriority: PriorityOfTask = .medium
     @ObservedObject var viewModel: HomeViewModel
     @State var locallySelectedFilter: FilterOption? = nil
-    
     @State private var filterOptions: [FilterOption] = [
         .init(type: .dueDate),
         .init(type: .completionDate),
