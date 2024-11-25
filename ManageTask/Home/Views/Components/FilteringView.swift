@@ -62,9 +62,7 @@ extension FilteringView {
                     case .dueDate, .completionDate:
                         FilteringListRowSelectionView(
                             title: option.type.rawValue,
-                            filterOption: Binding(
-                                get: { option },
-                                set: { option = $0 }),
+                            filterOption: $option,
                             locallySelectedFilter: $locallySelectedFilter,
                             content: FilterListRowDateView(
                                 fromDate: $option.fromDate, toDate: $option.toDate)
@@ -74,9 +72,7 @@ extension FilteringView {
                     case .priority:
                         FilteringListRowSelectionView(
                             title: option.type.rawValue,
-                            filterOption: Binding(
-                                get: { option },
-                                set: { option = $0 }),
+                            filterOption: $option,
                             locallySelectedFilter: $locallySelectedFilter,
                             content: Picker("", selection: $option.priority) {
                                 ForEach(PriorityOfTask.allCases, id: \.self) { priority in
@@ -104,7 +100,32 @@ extension FilteringView {
             Button("Apply") {
                 print("Before applying filter")
                 print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
-                viewModel.selectedFilterOption = locallySelectedFilter
+                
+                if locallySelectedFilter != nil {
+                    switch locallySelectedFilter!.type {
+                    case .dueDate, .completionDate:
+                        for option in filterOptions {
+                            if option.type == locallySelectedFilter!.type {
+                                locallySelectedFilter!.fromDate = option.fromDate
+                                locallySelectedFilter!.toDate = option.toDate
+                                break
+                            }
+                        }
+                        
+                    case .priority:
+                        for option in filterOptions {
+                            if option.type == locallySelectedFilter!.type {
+                                locallySelectedFilter!.priority = option.priority
+                                break
+                            }
+                        }
+                    }
+                    viewModel.selectedFilterOption = locallySelectedFilter
+                }
+                else {
+                    viewModel.selectedFilterOption = nil
+                }
+                
                 print("Before applying filter")
                 print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
             }
