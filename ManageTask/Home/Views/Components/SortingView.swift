@@ -24,7 +24,7 @@ struct SortingView: View {
     @State var fromDate: Date = Date()
     @State var ToDate: Date = Date()
     @State var selectedSortingOption: SortingOption?
-    @State var selectedFilteringOption: FilteringOption?
+    //@State var selectedFilteringOption: FilteringOption?
     @State var selectedTaskPriority: PriorityOfTask = .high
     @ObservedObject var viewModel: HomeViewModel
     

@@ -10,10 +10,28 @@ import Combine
 import SwiftUI
 
 
+enum FilterType: String, CaseIterable, Identifiable {
+    case dueDate = "Due Date"
+    case completionDate = "Completion Date"
+    case priority = "Priority"
+    
+    var id: Self { self }
+}
+
+struct FilterOption: Hashable {
+    var fromDate = Date()
+    var toDate = Date()
+    var priority = PriorityOfTask.medium
+    let type: FilterType
+}
+
+
+
 class HomeViewModel: ObservableObject {
     @Published var allTasks: [TaskModel] = []
     @Published var selectedSortingOption: SortingOption = .nameAToZ
-    @Published var selectedFilterOption: FilteringOption? = nil
+    //@Published var selectedFilterOption: FilteringOption? = nil
+    @Published var selectedFilterOption: FilterOption? = nil
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     private var cancellables = Set<AnyCancellable>()
     
