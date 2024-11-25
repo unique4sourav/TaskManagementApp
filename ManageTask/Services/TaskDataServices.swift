@@ -1,175 +1,23 @@
 //
-//  HomeViewModel.swift
+//  TaskDataService.swift
 //  ManageTask
 //
-//  Created by Sourav Santra on 14/11/24.
+//  Created by Sourav Santra on 18/11/24.
 //
 
 import Foundation
 import Combine
 import SwiftUI
 
-
-enum FilterType: String, CaseIterable, Identifiable {
-    case dueDate = "Due Date"
-    case completionDate = "Completion Date"
-    case priority = "Priority"
-    
-    var id: Self { self }
-}
-
-struct FilterOption: Hashable {
-    var fromDate = Calendar.current
-        .date(byAdding: .weekOfYear, value: -1, to: Date()) ?? Date()
-    var toDate = Date()
-    var priority = PriorityOfTask.medium
-    let type: FilterType
-    
-    init(fromDate: Date = Date(), toDate: Date = Date(), priority: PriorityOfTask = PriorityOfTask.medium, type: FilterType) {
-        self.fromDate = fromDate
-        self.toDate = toDate
-        self.priority = priority
-        self.type = type
-    }
-    
-    init(type: FilterType) {
-        self.type = type
-    }
-}
-
-
-
-class HomeViewModel: ObservableObject {
+class TaskDataService {
     @Published var allTasks: [TaskModel] = []
-    @Published var selectedSortingOption: SortingOption = .nameAToZ
-    @Published var selectedFilterOption: FilterOption? = nil
-    @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        fetchAllTasks()
+        getTasks()
     }
     
-    func getTasksAsPerCompletionStatus() -> [Binding<TaskModel>] {
-        
-        switch selectedTaskCompletionStatus {
-        case .all:
-            return allTasks.indices
-                .filter(filterTaskIndicesByCompletionStatus)
-                .filter(filterTaskIndicesBySelectedFilter)
-                .sorted(by: sortBySelectedOption)
-                .compactMap { [weak self] index in
-                    guard let self else { return nil }
-                    
-                    return Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )
-                }
-            
-        case .overdue:
-            return allTasks.indices
-                .filter(filterTaskIndicesByCompletionStatus)
-                .filter(filterTaskIndicesBySelectedFilter)
-                .sorted(by: sortBySelectedOption)
-                .compactMap { [weak self] index in
-                    guard let self else { return nil }
-                    
-                    return Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
-            
-        case .incomplete:
-            return allTasks.indices
-                .filter(filterTaskIndicesByCompletionStatus)
-                .filter(filterTaskIndicesBySelectedFilter)
-                .sorted(by: sortBySelectedOption)
-                .compactMap { [weak self] index in
-                    guard let self else { return nil }
-                    
-                    return Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
-            
-        case .completed:
-            return allTasks.indices
-                .filter(filterTaskIndicesByCompletionStatus)
-                .filter(filterTaskIndicesBySelectedFilter)
-                .sorted(by: sortBySelectedOption)
-                .compactMap { [weak self] index in
-                    guard let self else { return nil }
-                    
-                    return Binding(
-                        get: { self.allTasks[index] },
-                        set: { self.allTasks[index] = $0 }
-                    )}
-        }
-    }
-    
-    private func sortBySelectedOption(firstIndex: Int, secondIndex: Int) -> Bool {
-        guard allTasks.count > firstIndex && allTasks.count > secondIndex
-        else { return false }
-        
-        switch selectedSortingOption {
-        case .nameAToZ:
-            return allTasks[firstIndex].title < allTasks[secondIndex].title
-        case .nameZToA:
-            return allTasks[firstIndex].title > allTasks[secondIndex].title
-        case .priorityLowToHigh:
-            return allTasks[firstIndex].priority.rawValue < allTasks[secondIndex].priority.rawValue
-        case .priorityHighToLow:
-            return allTasks[firstIndex].priority.rawValue > allTasks[secondIndex].priority.rawValue
-        case .dueDateAsAscending:
-            return allTasks[firstIndex].dueDate < allTasks[secondIndex].dueDate
-        case .dueDateAsDecending:
-            return allTasks[firstIndex].dueDate > allTasks[secondIndex].dueDate
-        }
-    }
-    
-    private func filterTaskIndicesByCompletionStatus(index: Int) -> Bool {
-        switch selectedTaskCompletionStatus {
-        case .all:
-            return true
-            
-        case .overdue:
-            return allTasks[index].completionDate == nil &&
-            allTasks[index].dueDate <= Date()
-            
-        case .incomplete:
-            return allTasks[index].completionDate == nil &&
-            allTasks[index].dueDate > Date()
-            
-        case .completed:
-            return allTasks[index].completionDate != nil
-        }
-    }
-    
-    private func filterTaskIndicesBySelectedFilter(index: Int) -> Bool {
-            if selectedFilterOption != nil {
-                switch selectedFilterOption!.type {
-                case .dueDate:
-                    return (selectedFilterOption!.fromDate <= allTasks[index].dueDate) &&
-                    (selectedFilterOption!.toDate >= allTasks[index].dueDate)
-                    
-                case .completionDate:
-                    return allTasks[index].completionDate != nil &&
-                    (selectedFilterOption!.fromDate <= allTasks[index].completionDate!) &&
-                    (selectedFilterOption!.toDate >= allTasks[index].completionDate!)
-                    
-                case .priority:
-                    return allTasks[index].priority == selectedFilterOption!.priority
-                }
-            }
-            else {
-                return true
-            }
-    }
-}
-
-extension HomeViewModel {
-    func fetchAllTasks() {
+    private func getTasks() {
         allTasks =
         [
             TaskModel(
@@ -334,5 +182,3 @@ extension HomeViewModel {
         ]
     }
 }
-
-

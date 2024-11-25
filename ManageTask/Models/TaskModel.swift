@@ -9,12 +9,14 @@ import Foundation
 import Combine
 import SwiftUI
 
-enum TaskPriority: Int {
+enum PriorityOfTask: Int, CaseIterable, Identifiable {
     case low, medium, high
     
     var description: String {
         "\(self)".capitalized
     }
+    
+    var id: Self { self }
 }
 
 enum TaskColorString: String, CaseIterable {
@@ -22,16 +24,16 @@ enum TaskColorString: String, CaseIterable {
 }
 
 
-struct Task: Identifiable {
+struct TaskModel: Identifiable {
     let id = UUID()
     var title: String
     var dueDate: Date
-    var priority: TaskPriority
+    var priority: PriorityOfTask
     var notes: String?
     var completionDate: Date? = nil
     let color = Color(TaskColorString.allCases.randomElement())
     
-    init(title: String, dueDate: Date, priority: TaskPriority, notes: String? = nil, completionDate: Date? = nil) {
+    init(title: String, dueDate: Date, priority: PriorityOfTask, notes: String? = nil, completionDate: Date? = nil) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
