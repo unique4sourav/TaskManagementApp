@@ -43,6 +43,7 @@ class HomeViewModel: ObservableObject {
         switch selectedTaskCompletionStatus {
         case .all:
             return allTasks.indices
+                .filter(filterTaskIndicesByCompletionStatus)
                 .filter(filterTaskIndicesBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
@@ -55,7 +56,8 @@ class HomeViewModel: ObservableObject {
                 }
             
         case .overdue:
-            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate <= Date()}
+            return allTasks.indices
+                .filter(filterTaskIndicesByCompletionStatus)
                 .filter(filterTaskIndicesBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
@@ -67,7 +69,8 @@ class HomeViewModel: ObservableObject {
                     )}
             
         case .incomplete:
-            return allTasks.indices.filter { allTasks[$0].completionDate == nil && allTasks[$0].dueDate > Date() }
+            return allTasks.indices
+                .filter(filterTaskIndicesByCompletionStatus)
                 .filter(filterTaskIndicesBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
@@ -79,7 +82,8 @@ class HomeViewModel: ObservableObject {
                     )}
             
         case .completed:
-            return allTasks.indices.filter { allTasks[$0].completionDate != nil }
+            return allTasks.indices
+                .filter(filterTaskIndicesByCompletionStatus)
                 .filter(filterTaskIndicesBySelectedFilter)
                 .sorted(by: sortBySelectedOption)
                 .compactMap { [weak self] index in
@@ -92,7 +96,7 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func sortBySelectedOption(firstIndex: Int, secondIndex: Int) -> Bool {
+    private func sortBySelectedOption(firstIndex: Int, secondIndex: Int) -> Bool {
         guard allTasks.count > firstIndex && allTasks.count > secondIndex
         else { return false }
         
@@ -112,7 +116,23 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    
+    private func filterTaskIndicesByCompletionStatus(index: Int) -> Bool {
+        switch selectedTaskCompletionStatus {
+        case .all:
+            return true
+            
+        case .overdue:
+            return allTasks[index].completionDate == nil &&
+            allTasks[index].dueDate <= Date()
+            
+        case .incomplete:
+            return allTasks[index].completionDate == nil &&
+            allTasks[index].dueDate > Date()
+            
+        case .completed:
+            return allTasks[index].completionDate != nil
+        }
+    }
     
     private func filterTaskIndicesBySelectedFilter(index: Int) -> Bool {
             if selectedFilterOption != nil {
