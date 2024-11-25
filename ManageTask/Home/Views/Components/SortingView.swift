@@ -14,7 +14,6 @@ enum SortingOption: String, CaseIterable, Identifiable {
     case priorityHighToLow = "Priority(High-Low)"
     case dueDateAsAscending = "Due Date(Ascending)"
     case dueDateAsDecending = "Due Date(Decending)"
-    // TODO: think if we can add completion date as well
     var id: Self { self }
 }
 
@@ -69,7 +68,6 @@ extension SortingView {
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
             Button("Cancel") {
-                print("Cancelled filtering.")
                 dismiss()
             }
         }
@@ -78,7 +76,6 @@ extension SortingView {
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Apply") {
-                print("Sort tasks")
                 if let selectedSortingOption {
                     viewModel.selectedSortingOption = selectedSortingOption
                     dismiss()
