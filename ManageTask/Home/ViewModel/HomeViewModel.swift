@@ -13,6 +13,7 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var allTasks: [TaskModel] = []
     @Published var selectedSortingOption: SortingOption = .nameAToZ
+    @Published var selectedFilterOption: FilteringOption? = nil
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     private var cancellables = Set<AnyCancellable>()
     
