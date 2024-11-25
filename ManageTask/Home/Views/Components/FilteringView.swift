@@ -17,6 +17,11 @@ struct FilteringView: View {
         .init(type: .priority)
     ]
     
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
+    }
+    
     var body: some View {
         NavigationStack {
             filteringOptionList
@@ -82,9 +87,9 @@ extension FilteringView {
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Apply") {
-                print("Before applying filter")
-                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
-                
+                //                print("Before applying filter")
+                //                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
+                //
                 if locallySelectedFilter != nil {
                     switch locallySelectedFilter!.type {
                     case .dueDate, .completionDate:
@@ -110,8 +115,8 @@ extension FilteringView {
                     viewModel.selectedFilterOption = nil
                 }
                 
-                print("Before applying filter")
-                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
+                //                print("Before applying filter")
+                //                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
                 dismiss()
             }
         }

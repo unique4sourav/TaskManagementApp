@@ -93,7 +93,9 @@ extension HomeView {
             Button {
                 shouldShowSortingOptionView.toggle()
             } label: {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                Image(systemName: viewModel.selectedFilterOption != nil ?
+                      "line.3.horizontal.decrease.circle.fill" :
+                      "line.3.horizontal.decrease.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
