@@ -36,8 +36,6 @@ struct FilteringListRowSelectionView<Content: View>: View {
         
         .contentShape(Rectangle())
         .onTapGesture {
-            print("Inside tap gesture before assinment")
-            print("locallySelectedFilter = \(String(describing: locallySelectedFilter))")
             if locallySelectedFilter != nil,
                locallySelectedFilter!.type == filterOption.type {
                 locallySelectedFilter = nil
@@ -45,8 +43,6 @@ struct FilteringListRowSelectionView<Content: View>: View {
             else {
                 locallySelectedFilter = filterOption
             }
-            print("Inside tap gesture after assinment")
-            print("locallySelectedFilter = \(String(describing: locallySelectedFilter))")
         }
     }
 }

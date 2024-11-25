@@ -19,10 +19,22 @@ enum FilterType: String, CaseIterable, Identifiable {
 }
 
 struct FilterOption: Hashable {
-    var fromDate = Date()
+    var fromDate = Calendar.current
+        .date(byAdding: .weekOfYear, value: -1, to: Date()) ?? Date()
     var toDate = Date()
     var priority = PriorityOfTask.medium
     let type: FilterType
+    
+    init(fromDate: Date = Date(), toDate: Date = Date(), priority: PriorityOfTask = PriorityOfTask.medium, type: FilterType) {
+        self.fromDate = fromDate
+        self.toDate = toDate
+        self.priority = priority
+        self.type = type
+    }
+    
+    init(type: FilterType) {
+        self.type = type
+    }
 }
 
 

@@ -11,16 +11,7 @@ struct FilteringView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: HomeViewModel
     @State var locallySelectedFilter: FilterOption? = nil
-    @State private var filterOptions: [FilterOption] = [
-        .init(type: .dueDate),
-        .init(type: .completionDate),
-        .init(type: .priority)
-    ]
-    
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
-    }
+    @State private var filterOptions: [FilterOption] = []
     
     var body: some View {
         NavigationStack {
@@ -43,6 +34,46 @@ struct FilteringView: View {
 
 
 extension FilteringView {
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
+        
+        if viewModel.selectedFilterOption != nil {
+            switch viewModel.selectedFilterOption!.type {
+            case .dueDate:
+                _filterOptions = State(initialValue: [
+                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
+                          toDate: viewModel.selectedFilterOption!.toDate, type: .dueDate),
+                    .init(type: .completionDate),
+                    .init(type: .priority)
+                ])
+                
+            case .completionDate:
+                _filterOptions = State(initialValue: [
+                    .init(type: .dueDate),
+                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
+                          toDate: viewModel.selectedFilterOption!.toDate, type: .completionDate),
+                    .init(type: .priority)
+                ])
+                
+            case .priority:
+                _filterOptions = State(initialValue: [
+                    .init(type: .dueDate),
+                    .init(type: .completionDate),
+                    .init(fromDate: Date(), toDate: Date(),
+                          priority: viewModel.selectedFilterOption!.priority, type: .priority)
+                ])
+            }
+        }
+        else {
+            _filterOptions = State(initialValue: [
+                .init(type: .dueDate),
+                .init(type: .completionDate),
+                .init(type: .priority)
+            ])
+        }
+    }
+    
     private var filteringOptionList: some View {
         List {
             Section("Filter by:".uppercased()) {
@@ -87,9 +118,6 @@ extension FilteringView {
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Apply") {
-                //                print("Before applying filter")
-                //                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
-                //
                 if locallySelectedFilter != nil {
                     switch locallySelectedFilter!.type {
                     case .dueDate, .completionDate:
@@ -114,9 +142,6 @@ extension FilteringView {
                 else {
                     viewModel.selectedFilterOption = nil
                 }
-                
-                //                print("Before applying filter")
-                //                print("viewModel.selectedFilterOption: \(String(describing: viewModel.selectedFilterOption))")
                 dismiss()
             }
         }
