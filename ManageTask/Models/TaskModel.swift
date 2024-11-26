@@ -21,7 +21,7 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
 
 
 enum TaskBackground: String, CaseIterable, Identifiable {
-    case red, orange, green, mint, teal, cyan, blue, indigo, purple, pink, brown
+    case red, orange, green, cyan, blue, indigo, purple, pink, brown
     
     var id: Self { self }
     
@@ -35,12 +35,6 @@ enum TaskBackground: String, CaseIterable, Identifiable {
             
         case .green:
             return Color.green
-            
-        case .mint:
-            return Color.mint
-            
-        case .teal:
-            return Color.teal
             
         case .cyan:
             return Color.cyan

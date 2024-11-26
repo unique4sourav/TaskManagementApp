@@ -83,7 +83,7 @@ extension HomeView {
                     .aspectRatio(contentMode: .fit)
             }
             .sheet(isPresented: $shouldShowAddNewTaskView) {
-                EmptyView()
+                AddNewTaskView(viewModel: viewModel)
             }
         }
     }

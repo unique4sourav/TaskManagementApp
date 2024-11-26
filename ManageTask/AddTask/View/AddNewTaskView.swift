@@ -7,16 +7,19 @@
 
 import SwiftUI
 
-struct AddTaskView: View {
+struct AddNewTaskView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var viewModel: HomeViewModel
     
     @State var title: String = ""
     @State var dueDate = Calendar.current
         .date(byAdding: .minute, value: 30, to: Date()) ?? Date()
     @State var priority: PriorityOfTask = .medium
     @State var note: String = ""
-    @State var color: Color = TaskBackground.pink.color
+    @State var selectedColor: Color = TaskBackground.orange.color
     @State var colors: [Color] = TaskBackground.allColors
+    @State var showErrorAlert: Bool = false
+    @State var errorString: String? = nil
     
     var body: some View {
         NavigationStack {
@@ -33,26 +36,36 @@ struct AddTaskView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Add New Task")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 cancelToolBarItem
                 
                 applyToolBarItem
             }
+            .confirmationDialog("", isPresented: $showErrorAlert) {
+                Button("Discard Saving", role: .destructive) {
+                    errorString = nil
+                    showErrorAlert = false
+                    dismiss()
+                }
+            }
+            
+            
         }
-        .tint(color)
+        .tint(selectedColor)
     }
 
 }
 
 #Preview {
-    AddTaskView()
+    AddNewTaskView(viewModel: HomeViewModel())
 }
 
 
-extension AddTaskView {
+extension AddNewTaskView {
     private var titleView: some View {
         TextField("Add a task...", text: $title, axis: .vertical)
-            .font(.title3)
+            .font(.headline)
             .bold()
             .frame(height: 40)
             .padding()
@@ -66,6 +79,7 @@ extension AddTaskView {
                     .onTapGesture {
                         if !title.isEmpty {
                             title = ""
+                            UIApplication.shared.endEditing()
                         }
                     }
                 , alignment: .trailing)
@@ -74,6 +88,10 @@ extension AddTaskView {
                     .foregroundStyle(Color.secondary.opacity(0.25))
             }
             .padding(.top, 16)
+            .submitLabel(.done)
+            .onSubmit {
+                UIApplication.shared.endEditing()
+            }
     }
     
     private var dueDateView: some View {
@@ -103,33 +121,80 @@ extension AddTaskView {
                       prompt: Text("Here you can add a note about your task."),
                       axis: .vertical)
             .padding()
+            .padding(.trailing, 30)
             .lineLimit(5)
             .frame(height: 120)
             .background(.secondary.opacity(0.25))
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .padding(.bottom, 16)
+            .overlay (
+                Image(systemName: "xmark.circle")
+                    .padding()
+                    .opacity(note.isEmpty ? 0.0 : 1.0)
+                    .onTapGesture {
+                        if !note.isEmpty {
+                            note = ""
+                            UIApplication.shared.endEditing()
+                        }
+                    }
+                , alignment: .topTrailing)
+            .submitLabel(.done)
         }
     }
     
     private var colorPickerView: some View {
-        Picker("Task Background", selection: $color) {
-            ForEach(colors, id: \.self) { color in
-                HStack {
-                    Image(systemName: "circle.fill")
-                        .foregroundStyle(color, Color.red)
-                    
-                    Text("  " + color.description.capitalized + " ")
+//        Picker("Task Background", selection: $selectedColor) {
+//            ForEach(colors, id: \.self) { color in
+//                HStack {
+//                    Image(systemName: "circle.fill")
+//                        .foregroundStyle(color, Color.red)
+//                    
+//                    Text("  " + color.description.capitalized + " ")
+//                }
+//            }
+//        }
+//        .pickerStyle(.menu)
+        
+        
+        
+        VStack(alignment: .leading) {
+            Text("Task Background")
+            
+            HStack {
+                ForEach(colors, id: \.self) { color in
+                    ZStack {
+                        Circle().fill()
+                            .foregroundStyle(color)
+                            .padding(2)
+                        
+                        Circle()
+                            .strokeBorder(selectedColor == color ? .gray : .clear, lineWidth: 2)
+                            .scaleEffect(CGSize(width: 1.2, height: 1.2))
+                    }
+                    .onTapGesture {
+                        selectedColor = color
+                    }
                 }
             }
         }
-        .pickerStyle(.menu)
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: 100)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel") {
-                dismiss()
+            Button("Cancel", role: .destructive) {
+                UIApplication.shared.endEditing()
+                
+                if !title.isEmpty {
+                    showErrorAlert = true
+                }
+                else {
+                    dismiss()
+                }
             }
+            .tint(.red)
         }
     }
     
@@ -137,9 +202,12 @@ extension AddTaskView {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Save") {
                 
-                //dismiss()
+                
             }
+            .disabled(title.isEmpty)
         }
     }
 
 }
+
+
