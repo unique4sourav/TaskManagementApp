@@ -19,9 +19,54 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-enum TaskColorString: String, CaseIterable {
+
+enum TaskBackground: String, CaseIterable, Identifiable {
     case red, orange, green, mint, teal, cyan, blue, indigo, purple, pink, brown
+    
+    var id: Self { self }
+    
+    var color: Color {
+        switch self {
+        case .red:
+            return Color.red
+            
+        case .orange:
+            return Color.orange
+            
+        case .green:
+            return Color.green
+            
+        case .mint:
+            return Color.mint
+            
+        case .teal:
+            return Color.teal
+            
+        case .cyan:
+            return Color.cyan
+            
+        case .blue:
+            return Color.blue
+            
+        case .indigo:
+            return Color.indigo
+            
+        case .purple:
+            return Color.purple
+            
+        case .pink:
+            return Color.pink
+            
+        case .brown:
+            return Color.brown
+        }
+    }
+    
+    static var allColors: [Color] {
+        TaskBackground.allCases.map { $0.color }
+    }
 }
+
 
 
 struct TaskModel: Identifiable {
@@ -29,15 +74,15 @@ struct TaskModel: Identifiable {
     var title: String
     var dueDate: Date
     var priority: PriorityOfTask
-    var notes: String?
+    var note: String
     var completionDate: Date? = nil
-    let color = Color(TaskColorString.allCases.randomElement())
+    let color = Color(TaskBackground.allCases.randomElement())
     
-    init(title: String, dueDate: Date, priority: PriorityOfTask, notes: String? = nil, completionDate: Date? = nil) {
+    init(title: String, dueDate: Date, priority: PriorityOfTask, notes: String, completionDate: Date? = nil) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
-        self.notes = notes
+        self.note = notes
         self.completionDate = completionDate
     }
     

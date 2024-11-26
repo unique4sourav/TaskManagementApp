@@ -7,7 +7,7 @@
 import SwiftUI
 
 extension Color {
-    init?(_ taskColor: TaskColorString?) {
+    init?(_ taskColor: TaskBackground?) {
         switch taskColor?.rawValue {
         case "red": self = .red
         case "orange": self = .orange
