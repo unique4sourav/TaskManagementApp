@@ -70,14 +70,17 @@ struct TaskModel: Identifiable {
     var priority: PriorityOfTask
     var note: String
     var completionDate: Date? = nil
-    let color = Color(TaskBackground.allCases.randomElement())
+    var color: Color
     
-    init(title: String, dueDate: Date, priority: PriorityOfTask, notes: String, completionDate: Date? = nil) {
+    init(title: String, dueDate: Date, priority: PriorityOfTask,
+         notes: String, completionDate: Date? = nil,
+         color: Color = TaskBackground.allColors.randomElement() ?? .orange) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
         self.note = notes
         self.completionDate = completionDate
+        self.color = color
     }
     
     mutating func toggleCompleteness() {

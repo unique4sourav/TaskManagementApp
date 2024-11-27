@@ -11,15 +11,15 @@ struct AddNewTaskView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: HomeViewModel
     
-    @State var title: String = ""
-    @State var dueDate = Calendar.current
+    @State private var title: String = ""
+    @State private var dueDate = Calendar.current
         .date(byAdding: .minute, value: 30, to: Date()) ?? Date()
-    @State var priority: PriorityOfTask = .medium
-    @State var note: String = ""
-    @State var selectedColor: Color = TaskBackground.orange.color
-    @State var colors: [Color] = TaskBackground.allColors
-    @State var showErrorAlert: Bool = false
-    @State var errorString: String? = nil
+    @State private var priority: PriorityOfTask = .medium
+    @State private var note: String = ""
+    @State private var selectedColor: Color = TaskBackground.orange.color
+    @State private var colors: [Color] = TaskBackground.allColors
+    @State private var showErrorAlert: Bool = false
+    @State private var errorString: String? = nil
     
     var body: some View {
         NavigationStack {
@@ -201,8 +201,11 @@ extension AddNewTaskView {
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Save") {
-                
-                
+                let newTask = TaskModel(title: title, dueDate: dueDate,
+                                        priority: priority, notes: note,
+                                        color: selectedColor)
+                viewModel.addNew(task: newTask)
+                dismiss()
             }
             .disabled(title.isEmpty)
         }

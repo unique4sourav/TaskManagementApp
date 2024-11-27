@@ -40,14 +40,18 @@ struct FilterOption: Hashable {
 
 
 class HomeViewModel: ObservableObject {
-    @Published var allTasks: [TaskModel] = []
+    @Published private var allTasks: [TaskModel] = []
     @Published var selectedSortingOption: SortingOption = .nameAToZ
     @Published var selectedFilterOption: FilterOption? = nil
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
     private var cancellables = Set<AnyCancellable>()
     
     init() {
-        fetchAllTasks()
+        //fetchAllTasks()
+    }
+    
+    func addNew(task: TaskModel) {
+        allTasks.append(task)
     }
     
     func getTasksAsPerCompletionStatus() -> [Binding<TaskModel>] {
