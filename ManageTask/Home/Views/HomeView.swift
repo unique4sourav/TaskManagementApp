@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
+    @EnvironmentObject var taskManager: TaskManager
     @StateObject var viewModel = HomeViewModel()
     @State var shouldShowAddNewTaskView = false
     @State var shouldShowFilteringOptionView = false
@@ -56,7 +57,8 @@ extension HomeView {
     
     private var taskList: some View {
         List {
-            ForEach(viewModel.getTasksAsPerCompletionStatus()) { task in
+            ForEach(viewModel.getTasksAsPerCompletionStatus(using: taskManager))
+            { task in
                 ZStack(alignment: .leading) {
                     TaskView(task: task)
                     NavigationLink {
@@ -83,7 +85,7 @@ extension HomeView {
                     .aspectRatio(contentMode: .fit)
             }
             .sheet(isPresented: $shouldShowAddNewTaskView) {
-                AddNewTaskView(viewModel: viewModel)
+                AddNewTaskView()
             }
         }
     }

@@ -19,45 +19,16 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-
-enum TaskBackground: String, CaseIterable, Identifiable {
-    case red, orange, green, cyan, blue, indigo, purple, pink, brown
+enum TaskBackground {
+    case defaultStyle
     
-    var id: Self { self }
+    static let allColors: [Color] = [
+        .red, .orange, .green, .cyan, .blue,
+        .indigo, .purple, .pink, .brown
+    ]
     
     var color: Color {
-        switch self {
-        case .red:
-            return Color.red
-            
-        case .orange:
-            return Color.orange
-            
-        case .green:
-            return Color.green
-            
-        case .cyan:
-            return Color.cyan
-            
-        case .blue:
-            return Color.blue
-            
-        case .indigo:
-            return Color.indigo
-            
-        case .purple:
-            return Color.purple
-            
-        case .pink:
-            return Color.pink
-            
-        case .brown:
-            return Color.brown
-        }
-    }
-    
-    static var allColors: [Color] {
-        TaskBackground.allCases.map { $0.color }
+        .orange
     }
 }
 

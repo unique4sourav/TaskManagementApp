@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct ManageTaskApp: App {
+    @StateObject private var taskManager = TaskManager()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -26,6 +28,7 @@ struct ManageTaskApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView()
+                .environmentObject(taskManager)
         }
         .modelContainer(sharedModelContainer)
     }

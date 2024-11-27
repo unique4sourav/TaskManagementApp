@@ -1,23 +1,28 @@
 //
-//  TaskDataService.swift
+//  TaskManager.swift
 //  ManageTask
 //
-//  Created by Sourav Santra on 18/11/24.
+//  Created by Sourav Santra on 27/11/24.
 //
 
 import Foundation
-import Combine
-import SwiftUI
 
-class TaskDataService {
+class TaskManager: ObservableObject {
     @Published var allTasks: [TaskModel] = []
-    private var cancellables = Set<AnyCancellable>()
     
     init() {
-        getTasks()
+        fetchAllTasks()
     }
     
-    private func getTasks() {
+    func addTask(_ task: TaskModel) {
+        allTasks.append(task)
+    }
+    
+}
+
+
+extension TaskManager {
+    func fetchAllTasks() {
         allTasks =
         [
             TaskModel(

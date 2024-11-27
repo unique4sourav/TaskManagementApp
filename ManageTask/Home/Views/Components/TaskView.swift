@@ -85,11 +85,11 @@ extension TaskView {
     private var backgroundEffect: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 8)
-                .fill(task.color ?? .secondary)
+                .fill(task.color)
                 .northWestShadow(radius: 3, offset: 1)
             RoundedRectangle(cornerRadius: 8)
                 .inset(by: 2)
-                .fill(task.color ?? .secondary)
+                .fill(task.color)
                 .southEastShadow(radius: 1, offset: 1)
         }
     }
