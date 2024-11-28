@@ -23,7 +23,7 @@ struct TaskDashboardView: View {
                 taskList
                     .listStyle(.plain)
             }
-            .navigationTitle("All Tasks")
+            .navigationTitle(TaskDashboardConstant.navigationTitle)
             .toolbar {
                 addNewTaskToolBarItem
                 
@@ -45,8 +45,7 @@ struct TaskDashboardView: View {
 
 extension TaskDashboardView {
     private var taskCompletionSegment: some View {
-        Picker("Task Completion Status",
-               selection: $viewModel.selectedTaskCompletionStatus) {
+        Picker("", selection: $viewModel.selectedTaskCompletionStatus) {
             ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
                 Text(taskCompletionStatus.rawValue)
             }
@@ -80,7 +79,7 @@ extension TaskDashboardView {
             Button {
                 shouldShowAddNewTaskView.toggle()
             } label: {
-                Image(systemName: "plus.circle")
+                Image(systemName: TaskDashboardConstant.SFSymbolName.addNewTask)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
@@ -96,8 +95,8 @@ extension TaskDashboardView {
                 shouldShowSortingOptionView.toggle()
             } label: {
                 Image(systemName: viewModel.selectedFilterOption != nil ?
-                      "line.3.horizontal.decrease.circle.fill" :
-                      "line.3.horizontal.decrease.circle")
+                      TaskDashboardConstant.SFSymbolName.activeFilter :
+                        TaskDashboardConstant.SFSymbolName.inactiveFilter)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
@@ -114,7 +113,7 @@ extension TaskDashboardView {
                 shouldShowFilteringOptionView.toggle()
             } label: {
                 ZStack {
-                    Image(systemName: "arrow.up.arrow.down.circle")
+                    Image(systemName: TaskDashboardConstant.SFSymbolName.sort)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
@@ -125,26 +124,4 @@ extension TaskDashboardView {
         }
     }
     
-    private var addNewTaskCustomButton: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.mint)
-                .northWestShadow(radius: 3, offset: 3)
-                .frame(width: 60, height: 60)
-            
-            RoundedRectangle(cornerRadius: 8)
-                .inset(by: 3)
-                .fill(Color.mint)
-                .southEastShadow(radius: 1, offset: 1)
-                .frame(width: 60, height: 60)
-            
-            Image(systemName: "plus.circle")
-                .resizable()
-                .foregroundStyle(Color.white)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 40)
-            
-        }
-        .offset(x: -24, y: -24)
-    }
 }

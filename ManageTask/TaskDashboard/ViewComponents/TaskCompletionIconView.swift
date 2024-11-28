@@ -8,8 +8,8 @@
 import SwiftUI
 
 enum TaskCompletionIcon {
-    static let incomplete = Image(systemName: "circle")
-    static let complete = Image(systemName: "checkmark.circle.fill")
+    static let incomplete = Image(systemName: TaskDashboardConstant.SFSymbolName.incompleteTask)
+    static let complete = Image(systemName: TaskDashboardConstant.SFSymbolName.completedTask)
 }
 
 enum TaskCompletionStatus: LocalizedStringKey, CaseIterable, Identifiable {

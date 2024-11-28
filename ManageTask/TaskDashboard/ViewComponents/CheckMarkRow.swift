@@ -18,7 +18,7 @@ struct CheckMarkRow: View {
             Spacer()
             
             if isSelected {
-                Image(systemName: "checkmark")
+                Image(systemName: TaskDashboardConstant.SFSymbolName.checkmark)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 16)

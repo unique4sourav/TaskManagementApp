@@ -27,7 +27,7 @@ struct TaskDashboardSortingView: View {
         NavigationStack {
             sortingOptionList
             .listStyle(.insetGrouped)
-            .navigationTitle("Sort Tasks")
+            .navigationTitle(TaskDashboardSortingConstant.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 cancelToolBarItem
@@ -49,7 +49,7 @@ struct TaskDashboardSortingView: View {
 extension TaskDashboardSortingView {
     private var sortingOptionList: some View {
         List(selection: $locallySelectedSortingOption) {
-            Section("Sort by:".uppercased()) {
+            Section(TaskDashboardSortingConstant.sortSectionTitle.uppercased()) {
                 ForEach(SortingOption.allCases) { option in
                     CheckMarkRow(text: option.rawValue,
                                  isSelected: locallySelectedSortingOption == option)
@@ -60,7 +60,7 @@ extension TaskDashboardSortingView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel") {
+            Button(TaskDashboardSortingConstant.ToolBarItemTitle.cancel) {
                 dismiss()
             }
         }
@@ -68,7 +68,7 @@ extension TaskDashboardSortingView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Apply") {
+            Button(TaskDashboardSortingConstant.ToolBarItemTitle.apply) {
                 if let locallySelectedSortingOption {
                     currentSortingOption = locallySelectedSortingOption
                     dismiss()

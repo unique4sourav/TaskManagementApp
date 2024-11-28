@@ -14,8 +14,12 @@ struct FilterListRowDateView: View {
     
     var body: some View {
         VStack {
-            DatePicker("From", selection: $fromDate, in: ...toDate)
-            DatePicker("To", selection: $toDate, in: fromDate...)
+            DatePicker(
+                TaskDashboardFilteringConstant.FieldTitle.dateFrom,
+                selection: $fromDate, in: ...toDate)
+            DatePicker(
+                TaskDashboardFilteringConstant.FieldTitle.dateTo,
+                selection: $toDate, in: fromDate...)
         }
     }
 }

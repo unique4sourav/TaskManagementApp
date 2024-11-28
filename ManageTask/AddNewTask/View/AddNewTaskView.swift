@@ -29,7 +29,7 @@ struct AddNewTaskView: View {
                 colorPickerView
             }
             .listStyle(.plain)
-            .navigationTitle("Add New Task")
+            .navigationTitle(AddNewTaskConstant.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 cancelToolBarItem
@@ -42,8 +42,8 @@ struct AddNewTaskView: View {
                     dismiss()
                 }
             }
-            .alert(Text("Oops!"), isPresented: $viewModel.errorAlert.shouldShow, actions: {
-                Button("Understood") {
+            .alert(Text(AddNewTaskConstant.Error.alertTitle), isPresented: $viewModel.errorAlert.shouldShow, actions: {
+                Button(AddNewTaskConstant.Error.buttonTitle) {
                     viewModel.errorAlert = (false, nil)
                 }
             }, message: {
@@ -73,7 +73,8 @@ extension AddNewTaskView {
     }
     
     private var titleView: some View {
-        TextField("Add a task...", text: $viewModel.title, axis: .vertical)
+        TextField(AddNewTaskConstant.FieldPrompt.title,
+                  text: $viewModel.title, axis: .vertical)
             .font(.headline)
             .fontWeight(.semibold)
             .frame(height: 40)
@@ -84,7 +85,7 @@ extension AddNewTaskView {
             .focused($focusedField, equals: .title)
             .submitLabel(.next)
             .overlay (
-                Image(systemName: "xmark.circle")
+                Image(systemName: AddNewTaskConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.title.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -120,7 +121,8 @@ extension AddNewTaskView {
     }
     
     private var dueDateView: some View {
-        DatePicker("Due Date", selection: $viewModel.dueDate,
+        DatePicker(AddNewTaskConstant.FieldTitle.dueDate,
+                   selection: $viewModel.dueDate,
                    in: Date().adding30MinsOrCurrentIfFail...)
             .padding(.horizontal)
             .padding(.vertical, 8)
@@ -128,7 +130,8 @@ extension AddNewTaskView {
     
     
     private var priorityView: some View {
-        Picker("Priority", selection: $viewModel.priority) {
+        Picker(AddNewTaskConstant.FieldTitle.priority,
+               selection: $viewModel.priority) {
             ForEach(PriorityOfTask.allCases, id: \.self) { priority in
                 Text(priority.description)
             }
@@ -139,12 +142,12 @@ extension AddNewTaskView {
     
     private var noteView: some View {
         VStack(alignment: .leading) {
-            Text("Note")
+            Text(AddNewTaskConstant.FieldTitle.note)
                 .padding(.horizontal)
             
-            TextField("Note",
+            TextField("",
                       text: $viewModel.note,
-                      prompt: Text("Here you can add a note about your task."),
+                      prompt: Text(AddNewTaskConstant.FieldPrompt.note),
                       axis: .vertical)
             .padding()
             .padding(.trailing, 30)
@@ -156,7 +159,7 @@ extension AddNewTaskView {
             .focused($focusedField, equals: .note)
             .submitLabel(.done)
             .overlay (
-                Image(systemName: "xmark.circle")
+                Image(systemName: AddNewTaskConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.note.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -191,7 +194,7 @@ extension AddNewTaskView {
         
         
         VStack(alignment: .leading) {
-            Text("Task Background")
+            Text(AddNewTaskConstant.FieldTitle.taskBackground)
             
             HStack {
                 ForEach(viewModel.colors, id: \.self) { color in
@@ -217,11 +220,13 @@ extension AddNewTaskView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel", role: .destructive) {
+            Button(AddNewTaskConstant.ToolBarItemTitle.cancel, role: .destructive) {
                 focusedField = nil
                 
                 if !viewModel.title.isEmpty {
-                    viewModel.confirmationDialouge = (true, "Discard Saving")
+                    viewModel.confirmationDialouge =
+                    (true,
+                     AddNewTaskConstant.ConfirmationDialouge.ActionTitle.discardSavng)
                 }
                 else {
                     dismiss()
@@ -233,7 +238,7 @@ extension AddNewTaskView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Save") {
+            Button(AddNewTaskConstant.ToolBarItemTitle.save) {
                 Task {
                     do {
                         try await viewModel.addNewTask(using: taskManager)

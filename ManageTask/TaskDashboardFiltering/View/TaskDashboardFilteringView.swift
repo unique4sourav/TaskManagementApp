@@ -17,7 +17,7 @@ struct TaskDashboardFilteringView: View {
         NavigationStack {
             filteringOptionList
                 .listStyle(.insetGrouped)
-                .navigationTitle("Filter Tasks")
+                .navigationTitle(TaskDashboardFilteringConstant.navigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     cancelToolBarItem
@@ -79,7 +79,7 @@ extension TaskDashboardFilteringView {
     
     private var filteringOptionList: some View {
         List {
-            Section("Filter by:".uppercased()) {
+            Section(TaskDashboardFilteringConstant.filterSectionTitle.uppercased()) {
                 ForEach($filterOptions, id: \.type) { $option in
                     switch option.type {
                     case .dueDate, .completionDate:
@@ -108,7 +108,7 @@ extension TaskDashboardFilteringView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel") {
+            Button(TaskDashboardFilteringConstant.ToolBarItemTitle.cancel) {
                 dismiss()
             }
         }
@@ -116,7 +116,7 @@ extension TaskDashboardFilteringView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Apply") {
+            Button(TaskDashboardFilteringConstant.ToolBarItemTitle.apply) {
                 if locallySelectedFilter != nil {
                     switch locallySelectedFilter!.type {
                     case .dueDate, .completionDate:
