@@ -31,4 +31,10 @@ struct TaskDetailsConstant {
         static let markComplete = "Mark as Complete"
         static let markIncomplete = "Mark as Incomplete"
     }
+    
+    struct SFSymbolName {
+        private init() { }
+        
+        static let edit = "square.and.pencil"
+    }
 }
