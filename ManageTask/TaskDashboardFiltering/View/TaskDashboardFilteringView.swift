@@ -97,11 +97,7 @@ extension TaskDashboardFilteringView {
                             title: option.type.rawValue,
                             filterOption: $option,
                             locallySelectedFilter: $locallySelectedFilter,
-                            content: Picker("", selection: $option.priority) {
-                                ForEach(PriorityOfTask.allCases, id: \.self) { priority in
-                                    Text(priority.description)
-                                }
-                            }.pickerStyle(.menu)
+                            content: FilterListRowPriorityView(priority: $option.priority)
                         )
                     }
                 }
@@ -153,15 +149,4 @@ extension TaskDashboardFilteringView {
 
 
 
-struct FilterListRowDateView: View {
-    
-    @Binding var fromDate: Date
-    @Binding var toDate: Date
-    
-    var body: some View {
-        VStack {
-            DatePicker("From", selection: $fromDate, in: ...toDate)
-            DatePicker("To", selection: $toDate, in: fromDate...)
-        }
-    }
-}
+
