@@ -102,7 +102,7 @@ extension TaskDashboardView {
                     .aspectRatio(contentMode: .fit)
             }
             .sheet(isPresented: $shouldShowSortingOptionView) {
-                TaskDashboardFilteringView(viewModel: viewModel)
+                TaskDashboardFilteringView(currentFilter: $viewModel.selectedFilterOption)
             }
         }
     }

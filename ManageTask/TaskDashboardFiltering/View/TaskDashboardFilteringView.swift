@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskDashboardFilteringView: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: TaskDashboardViewModel
+    @Binding var currentFilter: FilterOption?
     @State var locallySelectedFilter: FilterOption? = nil
     @State private var filterOptions: [FilterOption] = []
     
@@ -25,52 +25,55 @@ struct TaskDashboardFilteringView: View {
                     applyToolBarItem
                 }
         }
+        .onAppear {
+            configureFilterOptionsAsPerCurrentFilter()
+        }
     }
 }
 
 #Preview {
-    TaskDashboardFilteringView(viewModel: TaskDashboardViewModel())
+    TaskDashboardFilteringView(currentFilter: .constant(nil))
 }
 
 
 extension TaskDashboardFilteringView {
-    init(viewModel: TaskDashboardViewModel) {
-        self.viewModel = viewModel
-        _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
-        
-        if viewModel.selectedFilterOption != nil {
-            switch viewModel.selectedFilterOption!.type {
+    
+    private func configureFilterOptionsAsPerCurrentFilter() {
+        if currentFilter != nil {
+            locallySelectedFilter = currentFilter
+            
+            switch currentFilter!.type {
             case .dueDate:
-                _filterOptions = State(initialValue: [
-                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
-                          toDate: viewModel.selectedFilterOption!.toDate, type: .dueDate),
+                filterOptions =  [
+                    .init(fromDate: currentFilter!.fromDate,
+                          toDate: currentFilter!.toDate, type: .dueDate),
                     .init(type: .completionDate),
                     .init(type: .priority)
-                ])
+                ]
                 
             case .completionDate:
-                _filterOptions = State(initialValue: [
+                filterOptions = [
                     .init(type: .dueDate),
-                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
-                          toDate: viewModel.selectedFilterOption!.toDate, type: .completionDate),
+                    .init(fromDate: currentFilter!.fromDate,
+                          toDate: currentFilter!.toDate, type: .completionDate),
                     .init(type: .priority)
-                ])
+                ]
                 
             case .priority:
-                _filterOptions = State(initialValue: [
+                filterOptions = [
                     .init(type: .dueDate),
                     .init(type: .completionDate),
                     .init(fromDate: Date(), toDate: Date(),
-                          priority: viewModel.selectedFilterOption!.priority, type: .priority)
-                ])
+                          priority: currentFilter!.priority, type: .priority)
+                ]
             }
         }
         else {
-            _filterOptions = State(initialValue: [
+            filterOptions = [
                 .init(type: .dueDate),
                 .init(type: .completionDate),
                 .init(type: .priority)
-            ])
+            ]
         }
     }
     
@@ -137,10 +140,10 @@ extension TaskDashboardFilteringView {
                             }
                         }
                     }
-                    viewModel.selectedFilterOption = locallySelectedFilter
+                    currentFilter = locallySelectedFilter
                 }
                 else {
-                    viewModel.selectedFilterOption = nil
+                    currentFilter = nil
                 }
                 dismiss()
             }
