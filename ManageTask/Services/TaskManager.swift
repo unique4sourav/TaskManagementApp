@@ -15,6 +15,20 @@ class TaskManager: ObservableObject {
         allTasks.append(task)
     }
     
+    func markComplete(_ task: TaskModel) {
+        guard let index = allTasks.firstIndex(where: { $0.id == task.id })
+        else { return }
+        
+        allTasks[index].completionDate = Date()
+    }
+    
+    func markIncomplete(_ task: TaskModel) {
+        guard let index = allTasks.firstIndex(where: { $0.id == task.id })
+        else { return }
+        
+        allTasks[index].completionDate = nil
+    }
+    
 }
 
 

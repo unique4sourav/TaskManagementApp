@@ -106,16 +106,15 @@ extension TaskDetailsView {
     private var markCompleteToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .bottomBar) {
             Button(TaskDetailsConstant.ToolBarItemTitle.markComplete) {
-                // TODO: Mark as complete
+                viewModel.markComplete(task, using: taskManager)
             }
-            
         }
     }
     
     private var markIncompleteToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .bottomBar) {
             Button(TaskDetailsConstant.ToolBarItemTitle.markIncomplete) {
-                // TODO: Mark as incomplete
+                viewModel.markIncomplete(task, using: taskManager)
             }
             
         }
@@ -127,4 +126,5 @@ extension TaskDetailsView {
 #Preview {
     @Previewable @State var task = PreviewContent.shared.task
     TaskDetailsView(task: task)
+        .environmentObject(TaskManager())
 }

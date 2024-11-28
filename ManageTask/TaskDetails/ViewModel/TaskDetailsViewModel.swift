@@ -41,4 +41,12 @@ class TaskDetailsViewModel: ObservableObject {
         
         
     }
+    
+    func markComplete(_ task: TaskModel, using taskManager: TaskManager) {
+        taskManager.markComplete(task)
+    }
+    
+    func markIncomplete(_ task: TaskModel, using taskManager: TaskManager) {
+        taskManager.markIncomplete(task)
+    }
 }
