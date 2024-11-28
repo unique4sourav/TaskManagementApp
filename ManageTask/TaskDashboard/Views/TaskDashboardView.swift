@@ -120,7 +120,7 @@ extension TaskDashboardView {
                 }
             }
             .sheet(isPresented: $shouldShowFilteringOptionView) {
-                TaskDashboardSortingView(viewModel: viewModel)
+                TaskDashboardSortingView(currentSortingOption: $viewModel.selectedSortingOption)
             }
         }
     }

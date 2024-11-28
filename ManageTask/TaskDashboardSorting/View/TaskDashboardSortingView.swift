@@ -20,17 +20,8 @@ enum SortingOption: String, CaseIterable, Identifiable {
 
 struct TaskDashboardSortingView: View {
     @Environment(\.dismiss) var dismiss
-    @State var fromDate: Date = Date()
-    @State var ToDate: Date = Date()
-    @State var selectedSortingOption: SortingOption?
-    @State var selectedTaskPriority: PriorityOfTask = .high
-    @ObservedObject var viewModel: TaskDashboardViewModel
-    
-    init(viewModel: TaskDashboardViewModel) {
-        self.viewModel = viewModel
-        _selectedSortingOption = State(initialValue: viewModel.selectedSortingOption)
-    }
-    
+    @State var locallySelectedSortingOption: SortingOption?
+    @Binding var currentSortingOption: SortingOption
     
     var body: some View {
         NavigationStack {
@@ -44,21 +35,24 @@ struct TaskDashboardSortingView: View {
                 applyToolBarItem
             }
         }
+        .onAppear {
+            self.locallySelectedSortingOption = currentSortingOption
+        }
     }
 }
 
 #Preview {
-    TaskDashboardSortingView(viewModel: TaskDashboardViewModel())
+    TaskDashboardSortingView(currentSortingOption: .constant(.nameAToZ))
 }
 
 
 extension TaskDashboardSortingView {
     private var sortingOptionList: some View {
-        List(selection: $selectedSortingOption) {
+        List(selection: $locallySelectedSortingOption) {
             Section("Sort by:".uppercased()) {
                 ForEach(SortingOption.allCases) { option in
                     CheckMarkRow(text: option.rawValue,
-                                 isSelected: selectedSortingOption == option)
+                                 isSelected: locallySelectedSortingOption == option)
                 }
             }
         }
@@ -75,8 +69,8 @@ extension TaskDashboardSortingView {
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button("Apply") {
-                if let selectedSortingOption {
-                    viewModel.selectedSortingOption = selectedSortingOption
+                if let locallySelectedSortingOption {
+                    currentSortingOption = locallySelectedSortingOption
                     dismiss()
                 }
             }
