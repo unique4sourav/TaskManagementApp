@@ -38,8 +38,6 @@ class TaskDetailsViewModel: ObservableObject {
                 return Color.green
             }
         }
-        
-        
     }
     
     func markComplete(_ task: TaskModel, using taskManager: TaskManager) {

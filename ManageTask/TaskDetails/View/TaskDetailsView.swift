@@ -132,7 +132,6 @@ extension TaskDetailsView {
             Button(TaskDetailsConstant.ToolBarItemTitle.markIncomplete) {
                 viewModel.markIncomplete(task, using: taskManager)
             }
-            
         }
     }
     
