@@ -38,7 +38,7 @@ struct FilterOption: Hashable {
 
 
 
-class HomeViewModel: ObservableObject {
+class TaskDashboardViewModel: ObservableObject {
     @Published var selectedSortingOption: SortingOption = .nameAToZ
     @Published var selectedFilterOption: FilterOption? = nil
     @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all

@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct HomeView: View {
+struct TaskDashboardView: View {
     @EnvironmentObject var taskManager: TaskManager
-    @StateObject var viewModel = HomeViewModel()
+    @StateObject var viewModel = TaskDashboardViewModel()
     @State var shouldShowAddNewTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
@@ -39,11 +39,11 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    TaskDashboardView()
 }
 
 
-extension HomeView {
+extension TaskDashboardView {
     private var taskCompletionSegment: some View {
         Picker("Task Completion Status",
                selection: $viewModel.selectedTaskCompletionStatus) {
@@ -102,7 +102,7 @@ extension HomeView {
                     .aspectRatio(contentMode: .fit)
             }
             .sheet(isPresented: $shouldShowSortingOptionView) {
-                FilteringView(viewModel: viewModel)
+                TaskDashboardFilteringView(viewModel: viewModel)
             }
         }
     }
@@ -120,7 +120,7 @@ extension HomeView {
                 }
             }
             .sheet(isPresented: $shouldShowFilteringOptionView) {
-                SortingView(viewModel: viewModel)
+                TaskDashboardSortingView(viewModel: viewModel)
             }
         }
     }

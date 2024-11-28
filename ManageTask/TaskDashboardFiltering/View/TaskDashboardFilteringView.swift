@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct FilteringView: View {
+struct TaskDashboardFilteringView: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: TaskDashboardViewModel
     @State var locallySelectedFilter: FilterOption? = nil
     @State private var filterOptions: [FilterOption] = []
     
@@ -29,12 +29,12 @@ struct FilteringView: View {
 }
 
 #Preview {
-    FilteringView(viewModel: HomeViewModel())
+    TaskDashboardFilteringView(viewModel: TaskDashboardViewModel())
 }
 
 
-extension FilteringView {
-    init(viewModel: HomeViewModel) {
+extension TaskDashboardFilteringView {
+    init(viewModel: TaskDashboardViewModel) {
         self.viewModel = viewModel
         _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
         

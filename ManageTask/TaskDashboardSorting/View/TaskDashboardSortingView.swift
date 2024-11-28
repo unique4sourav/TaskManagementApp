@@ -18,16 +18,15 @@ enum SortingOption: String, CaseIterable, Identifiable {
 }
 
 
-struct SortingView: View {
+struct TaskDashboardSortingView: View {
     @Environment(\.dismiss) var dismiss
     @State var fromDate: Date = Date()
     @State var ToDate: Date = Date()
     @State var selectedSortingOption: SortingOption?
-    //@State var selectedFilteringOption: FilteringOption?
     @State var selectedTaskPriority: PriorityOfTask = .high
-    @ObservedObject var viewModel: HomeViewModel
+    @ObservedObject var viewModel: TaskDashboardViewModel
     
-    init(viewModel: HomeViewModel) {
+    init(viewModel: TaskDashboardViewModel) {
         self.viewModel = viewModel
         _selectedSortingOption = State(initialValue: viewModel.selectedSortingOption)
     }
@@ -49,11 +48,11 @@ struct SortingView: View {
 }
 
 #Preview {
-    SortingView(viewModel: HomeViewModel())
+    TaskDashboardSortingView(viewModel: TaskDashboardViewModel())
 }
 
 
-extension SortingView {
+extension TaskDashboardSortingView {
     private var sortingOptionList: some View {
         List(selection: $selectedSortingOption) {
             Section("Sort by:".uppercased()) {
