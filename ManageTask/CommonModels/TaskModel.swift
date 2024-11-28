@@ -63,3 +63,24 @@ struct TaskModel: Identifiable {
         }
     }
 }
+
+extension TaskModel {
+    var isCompleted: Bool {
+        completionDate != nil ? true : false
+    }
+    
+    var completionStatus: TaskCompletionStatus {
+        if isCompleted {
+            return .completed
+        }
+        else if dueDate > Date() {
+            return .incomplete
+        }
+        else {
+            return .overdue
+        }
+    }
+    
+    
+    
+}

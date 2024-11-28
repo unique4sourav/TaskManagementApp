@@ -40,6 +40,7 @@ struct TaskDashboardView: View {
 
 #Preview {
     TaskDashboardView()
+        .environmentObject(TaskManager())
 }
 
 
@@ -61,7 +62,7 @@ extension TaskDashboardView {
                 ZStack(alignment: .leading) {
                     TaskView(task: task)
                     NavigationLink {
-                        EmptyView()
+                        TaskDetailsView(task: task.wrappedValue)
                     } label: {
                         EmptyView()
                     }

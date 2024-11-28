@@ -30,13 +30,8 @@ struct TaskView: View {
 }
 
 #Preview {
-    let task = TaskModel(
-        title: "Complete the task management app. Complete the task management app.",
-        dueDate: Date(),
-        priority: .high,
-        notes: "Task Management App This app will help users manage their tasks effectively. Key Features: * Home Screen: Displays a list of tasks with options to filter by priorities or due dates. * Add/Edit Task Screen: Allows users to add or edit a task, specifying details like title, due date, priority, and notes. Implement data persistence to save tasks. * Task Details Screen: Shows detailed information about a selected task with options to mark it as complete or delete it.")
-    
-    TaskView(task: .constant(task))
+    @Previewable @State var task = PreviewContent.shared.task
+    TaskView(task: $task)
 }
 
 

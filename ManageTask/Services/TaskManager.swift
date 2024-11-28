@@ -8,7 +8,8 @@
 import Foundation
 
 class TaskManager: ObservableObject {
-    @Published var allTasks: [TaskModel] = []
+    // TODO: Make the all task array empty once done with testing
+    @Published var allTasks: [TaskModel] =  /*[]*/ [PreviewContent.shared.task]
     
     func addTask(_ task: TaskModel) {
         allTasks.append(task)
