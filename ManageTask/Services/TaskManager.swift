@@ -7,7 +7,7 @@
 
 import Foundation
 
-class TaskManager: ObservableObject {
+final class TaskManager: ObservableObject {
     @Published var allTasks: [TaskModel] = []
     
     func addTask(_ task: TaskModel) {
