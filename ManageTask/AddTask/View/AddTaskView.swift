@@ -11,7 +11,7 @@ struct AddTaskView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var taskManager: TaskManager
     
-    @StateObject private var viewModel = AddNewTaskViewModel()
+    @StateObject private var viewModel = AddTaskViewModel()
     @FocusState private var focusedField: FocusedField?
     
     
@@ -85,7 +85,7 @@ extension AddTaskView {
             .focused($focusedField, equals: .title)
             .submitLabel(.next)
             .overlay (
-                Image(systemName: AddTaskConstant.SFSymbolName.cross)
+                Image(systemName: AppConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.title.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -159,7 +159,7 @@ extension AddTaskView {
             .focused($focusedField, equals: .note)
             .submitLabel(.done)
             .overlay (
-                Image(systemName: AddTaskConstant.SFSymbolName.cross)
+                Image(systemName: AppConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.note.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -241,9 +241,9 @@ extension AddTaskView {
             Button(AddTaskConstant.ToolBarItemTitle.save) {
                 Task {
                     do {
-                        try await viewModel.addNewTask(using: taskManager)
+                        try await viewModel.addTask(using: taskManager)
                     }
-                    catch let error as AddNewTaskError {
+                    catch let error as AddTaskError {
                         viewModel.errorAlert = (true, error)
                     }
                 }

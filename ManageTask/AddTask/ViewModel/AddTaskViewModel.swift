@@ -1,5 +1,5 @@
 //
-//  AddNewTaskViewModel.swift
+//  AddTaskViewModel.swift
 //  ManageTask
 //
 //  Created by Sourav Santra on 27/11/24.
@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-enum AddNewTaskError: String, LocalizedError {
+enum AddTaskError: String, LocalizedError {
     case emptyTitle = "Task title is empty."
     case pastDate = "Due date of the task has alredy passed."
     
@@ -26,16 +26,16 @@ class AddTaskViewModel: ObservableObject {
     @Published var selectedColor: Color = TaskBackground.defaultStyle.color
     @Published var colors: [Color] = TaskBackground.allColors
     @Published var confirmationDialouge: (shouldShow: Bool, message: String?) = (false, nil)
-    @Published var errorAlert: (shouldShow: Bool, error: AddNewTaskError?) = (false, nil)
+    @Published var errorAlert: (shouldShow: Bool, error: AddTaskError?) = (false, nil)
     @Published var isTaskAdded: Bool = false
     
     @MainActor
-    func addNewTask(using taskManager: TaskManager) async throws {
+    func addTask(using taskManager: TaskManager) async throws {
         guard !title.isEmpty
-        else { throw  AddNewTaskError.emptyTitle}
+        else { throw  AddTaskError.emptyTitle}
         
         guard dueDate > Date()
-        else { throw AddNewTaskError.pastDate }
+        else { throw AddTaskError.pastDate }
         
         let newTask = TaskModel(
             title: title, dueDate: dueDate, priority: priority, notes: note, color: selectedColor)

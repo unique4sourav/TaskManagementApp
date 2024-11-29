@@ -10,7 +10,7 @@ import SwiftUI
 struct TaskDashboardView: View {
     @EnvironmentObject var taskManager: TaskManager
     @StateObject var viewModel = TaskDashboardViewModel()
-    @State var shouldShowAddNewTaskView = false
+    @State var shouldShowAddTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
     
@@ -25,7 +25,7 @@ struct TaskDashboardView: View {
             }
             .navigationTitle(TaskDashboardConstant.navigationTitle)
             .toolbar {
-                addNewTaskToolBarItem
+                addTaskToolBarItem
                 
                 filteringToolBarItem
                 
@@ -40,6 +40,7 @@ struct TaskDashboardView: View {
 
 #Preview {
     TaskDashboardView()
+        .environmentObject(TaskManager())
 }
 
 
@@ -74,17 +75,17 @@ extension TaskDashboardView {
     }
     
     
-    private var addNewTaskToolBarItem: ToolbarItem<(), some View> {
+    private var addTaskToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                shouldShowAddNewTaskView.toggle()
+                shouldShowAddTaskView.toggle()
             } label: {
-                Image(systemName: TaskDashboardConstant.SFSymbolName.addNewTask)
+                Image(systemName: AppConstant.SFSymbolName.add)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
-            .sheet(isPresented: $shouldShowAddNewTaskView) {
-                AddNewTaskView()
+            .sheet(isPresented: $shouldShowAddTaskView) {
+                AddTaskView()
             }
         }
     }
@@ -95,8 +96,8 @@ extension TaskDashboardView {
                 shouldShowSortingOptionView.toggle()
             } label: {
                 Image(systemName: viewModel.selectedFilterOption != nil ?
-                      TaskDashboardConstant.SFSymbolName.activeFilter :
-                        TaskDashboardConstant.SFSymbolName.inactiveFilter)
+                      AppConstant.SFSymbolName.activeFilter :
+                        AppConstant.SFSymbolName.inactiveFilter)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
@@ -113,7 +114,7 @@ extension TaskDashboardView {
                 shouldShowFilteringOptionView.toggle()
             } label: {
                 ZStack {
-                    Image(systemName: TaskDashboardConstant.SFSymbolName.sort)
+                    Image(systemName: AppConstant.SFSymbolName.sort)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }

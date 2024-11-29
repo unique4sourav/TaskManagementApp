@@ -1,5 +1,5 @@
 //
-//  AddNewTaskConstant.swift
+//  AddTaskConstant.swift
 //  ManageTask
 //
 //  Created by Sourav Santra on 28/11/24.
@@ -16,12 +16,6 @@ struct AddTaskConstant {
         
         static let alertTitle = "Oops!"
         static let buttonTitle = "Understood"
-    }
-    
-    struct SFSymbolName {
-        private init() { }
-        
-        static let cross = "xmark.circle"
     }
     
     struct FieldTitle {
