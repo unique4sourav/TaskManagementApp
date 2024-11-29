@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import SwiftUI
+
 struct AddTaskConstant {
     private init() { }
     
@@ -41,9 +43,9 @@ struct AddTaskConstant {
         static let save = "Save"
     }
     
-    struct ConfirmationDialougeTitle {
+    struct ConfirmationDialougeMessage {
         private init() { }
         
-        static let discardSavng = "Discard Saving"
+        static let discardSaving = "Discard Saving"
     }
 }

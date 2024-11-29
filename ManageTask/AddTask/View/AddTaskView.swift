@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct AddTaskView: View {
-    @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var taskManager: TaskManager
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var taskManager: TaskManager
     
     @StateObject private var viewModel = AddTaskViewModel()
     @FocusState private var focusedField: FocusedField?
-    
     
     var body: some View {
         NavigationStack {
@@ -34,22 +33,23 @@ struct AddTaskView: View {
             .toolbar {
                 cancelToolBarItem
                 
-                applyToolBarItem
+                saveToolBarItem
             }
-            .confirmationDialog("", isPresented: $viewModel.confirmationDialouge.shouldShow) {
-                Button(viewModel.confirmationDialouge.message ?? "", role: .destructive) {
-                    viewModel.confirmationDialouge = (false, nil)
-                    dismiss()
+            .confirmationDialog("", isPresented: $viewModel.shouldShowConfirmationDialouge) {
+                Button(viewModel.confirmationMessage, role: .destructive) {
+                    viewModel.dismissView()
                 }
             }
-            .alert(Text(AddTaskConstant.Error.alertTitle), isPresented: $viewModel.errorAlert.shouldShow, actions: {
+            .alert(Text(AddTaskConstant.Error.alertTitle), isPresented: $viewModel.shouldShowErrorAlert, actions: {
                 Button(AddTaskConstant.Error.buttonTitle) {
-                    viewModel.errorAlert = (false, nil)
+                    viewModel.acknowledgeError()
                 }
             }, message: {
-                Text(viewModel.errorAlert.error?.localizedDescription ?? "")
+                if let error = viewModel.error {
+                    Text(error.localizedDescription)
+                }
             })
-            .onChange(of: viewModel.isTaskAdded, initial: false) { _, newValue in
+            .onChange(of: viewModel.shouldDismissView, initial: false) { _, newValue in
                 if newValue {
                     dismiss()
                 }
@@ -66,70 +66,51 @@ struct AddTaskView: View {
         .environmentObject(TaskManager())
 }
 
-
-extension AddTaskView {
-    enum FocusedField {
-        case title, note
-    }
-    
-    private var titleView: some View {
+// MARK: - SubViews
+private extension AddTaskView {
+    var titleView: some View {
         TextField(AddTaskConstant.FieldPrompt.title,
                   text: $viewModel.title, axis: .vertical)
-            .font(.headline)
-            .fontWeight(.semibold)
-            .frame(height: 40)
-            .padding()
-            .padding(.trailing, 30)
-            .autocorrectionDisabled()
-            .lineLimit(2)
-            .focused($focusedField, equals: .title)
-            .submitLabel(.next)
-            .overlay (
-                Image(systemName: AppConstant.SFSymbolName.cross)
-                    .padding()
-                    .opacity(viewModel.title.isEmpty ? 0.0 : 1.0)
-                    .onTapGesture {
-                        if !viewModel.title.isEmpty {
-                            viewModel.title = ""
-                            focusedField = nil
-                        }
-                    }
-                , alignment: .trailing)
-            .background {
-                RoundedRectangle(cornerRadius: 10)
-                    .foregroundStyle(Color.secondary.opacity(0.25))
+        .font(.headline)
+        .fontWeight(.semibold)
+        .frame(height: 40)
+        .padding()
+        .padding(.trailing, 30)
+        .autocorrectionDisabled()
+        .lineLimit(2)
+        .focused($focusedField, equals: .title)
+        .submitLabel(.next)
+        .overlay (
+            Image(systemName: AppConstant.SFSymbolName.cross)
+                .padding()
+                .opacity(viewModel.title.isEmpty ? 0.0 : 1.0)
+                .onTapGesture { viewModel.clearTitle() }
+            , alignment: .trailing)
+        .background {
+            RoundedRectangle(cornerRadius: 10)
+                .foregroundStyle(Color.secondary.opacity(0.25))
+        }
+        .padding(.top, 16)
+        .onChange(of: viewModel.title, initial: true, { _, newValue in
+            if let last = newValue.last, last == "\n" {
+                viewModel.title.removeLast()
+                handleOnSubmitInKeyboard()
             }
-            .padding(.top, 16)
-            .onChange(of: viewModel.title, initial: true, { _, newValue in
-                if let last = newValue.last, last == "\n" {
-                    viewModel.title.removeLast()
-                    handleOnSubmitInKeyboard()
-                }
-            })
+        })
         
     }
     
-    private func handleOnSubmitInKeyboard() {
-        switch focusedField {
-        case .title:
-            focusedField = .note
-        case .note:
-            focusedField = nil
-        case nil:
-            break
-        }
-    }
     
-    private var dueDateView: some View {
+    var dueDateView: some View {
         DatePicker(AddTaskConstant.FieldTitle.dueDate,
                    selection: $viewModel.dueDate,
                    in: Date().adding30MinsOrCurrentIfFail...)
-            .padding(.horizontal)
-            .padding(.vertical, 8)
+        .padding(.horizontal)
+        .padding(.vertical, 8)
     }
     
     
-    private var priorityView: some View {
+    var priorityView: some View {
         Picker(AddTaskConstant.FieldTitle.priority,
                selection: $viewModel.priority) {
             ForEach(PriorityOfTask.allCases, id: \.self) { priority in
@@ -140,13 +121,12 @@ extension AddTaskView {
             .padding(.vertical, 8)
     }
     
-    private var noteView: some View {
+    var noteView: some View {
         VStack(alignment: .leading) {
             Text(AddTaskConstant.FieldTitle.note)
                 .padding(.horizontal)
             
-            TextField("",
-                      text: $viewModel.note,
+            TextField("", text: $viewModel.note,
                       prompt: Text(AddTaskConstant.FieldPrompt.note),
                       axis: .vertical)
             .padding()
@@ -162,12 +142,7 @@ extension AddTaskView {
                 Image(systemName: AppConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.note.isEmpty ? 0.0 : 1.0)
-                    .onTapGesture {
-                        if !viewModel.note.isEmpty {
-                            viewModel.note = ""
-                            focusedField = nil
-                        }
-                    }
+                    .onTapGesture { viewModel.clearNote() }
                 , alignment: .topTrailing)
             .onChange(of: viewModel.note, initial: true, { _, newValue in
                 if let last = newValue.last, last == "\n" {
@@ -178,7 +153,7 @@ extension AddTaskView {
         }
     }
     
-    private var colorPickerView: some View {
+    var colorPickerView: some View {
         VStack(alignment: .leading) {
             Text(AddTaskConstant.FieldTitle.taskBackground)
             
@@ -204,35 +179,21 @@ extension AddTaskView {
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
     
-    private var cancelToolBarItem: ToolbarItem<(), some View> {
+    var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
             Button(AddTaskConstant.ToolBarItemTitle.cancel, role: .destructive) {
                 focusedField = nil
-                
-                if !viewModel.title.isEmpty {
-                    viewModel.confirmationDialouge =
-                    (true,
-                     AddTaskConstant.ConfirmationDialougeTitle.discardSavng)
-                }
-                else {
-                    dismiss()
-                }
+                viewModel.cancelAddingTask()
             }
             .tint(.red)
         }
     }
     
-    private var applyToolBarItem: ToolbarItem<(), some View> {
+    var saveToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button(AddTaskConstant.ToolBarItemTitle.save) {
-                Task {
-                    do {
-                        try await viewModel.addTask(using: taskManager)
-                    }
-                    catch let error as AddTaskError {
-                        viewModel.errorAlert = (true, error)
-                    }
-                }
+                focusedField = nil
+                viewModel.addTask(using: taskManager)
             }
             .disabled(viewModel.title.isEmpty)
         }
@@ -241,4 +202,24 @@ extension AddTaskView {
     
 }
 
+// MARK: - View functions
+private extension AddTaskView {
+    func handleOnSubmitInKeyboard() {
+        switch focusedField {
+        case .title:
+            focusedField = .note
+        case .note:
+            focusedField = nil
+        case nil:
+            break
+        }
+    }
+}
 
+// MARK: - Custom types
+private extension AddTaskView {
+    enum FocusedField {
+        case title, note
+    }
+
+}

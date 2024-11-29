@@ -6,9 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct AppConstant {
     private init() {}
+    
+    static let defaultTaskColor: Color = .orange
+    static let allTaskColors: [Color] = [
+        .red, .orange, .green, .cyan, .blue,
+        .indigo, .purple, .pink, .brown
+    ]
     
     struct SFSymbolName {
         private init() {}

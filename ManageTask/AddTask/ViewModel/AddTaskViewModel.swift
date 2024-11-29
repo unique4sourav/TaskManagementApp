@@ -20,27 +20,65 @@ enum AddTaskError: String, LocalizedError {
 
 final class AddTaskViewModel: ObservableObject {
     @Published var title: String = ""
-    @Published var dueDate = Date().adding30MinsOrCurrentIfFail
+    @Published var dueDate: Date = .now.adding30MinsOrCurrentIfFail
     @Published var priority: PriorityOfTask = .medium
     @Published var note: String = ""
-    @Published var selectedColor: Color = TaskBackground.defaultStyle.color
-    @Published var colors: [Color] = TaskBackground.allColors
-    @Published var confirmationDialouge: (shouldShow: Bool, message: String?) = (false, nil)
-    @Published var errorAlert: (shouldShow: Bool, error: AddTaskError?) = (false, nil)
-    @Published var isTaskAdded: Bool = false
+    @Published var selectedColor: Color = AppConstant.defaultTaskColor
+    @Published var colors: [Color] = AppConstant.allTaskColors
+    @Published var shouldDismissView: Bool = false
+    @Published var shouldShowConfirmationDialouge: Bool = false
+    @Published var confirmationMessage: String = ""
+    @Published var shouldShowErrorAlert: Bool = false
+    @Published var error: AddTaskError? = nil
     
     
-    func addTask(using taskManager: TaskManager) async throws {
+    func addTask(using taskManager: TaskManager) {
         guard !title.isEmpty
-        else { throw  AddTaskError.emptyTitle}
+        else {
+            error = AddTaskError.emptyTitle
+            shouldShowErrorAlert = true
+            return
+        }
         
-        guard dueDate > Date()
-        else { throw AddTaskError.pastDate }
+        guard dueDate > .now
+        else {
+            error = AddTaskError.pastDate
+            shouldShowErrorAlert = true
+            return
+        }
         
         let newTask = TaskModel(
             title: title, dueDate: dueDate, priority: priority, notes: note, color: selectedColor)
         
         taskManager.addTask(newTask)
-        isTaskAdded = true
+        dismissView()
+    }
+    
+    func cancelAddingTask() {
+        if !title.isEmpty {
+            confirmationMessage = AddTaskConstant.ConfirmationDialougeMessage.discardSaving
+            shouldShowConfirmationDialouge = true
+        }
+        else {
+            dismissView()
+        }
+    }
+    
+    func dismissView() {
+        shouldDismissView = true
+    }
+    
+    func acknowledgeError() {
+        print("shouldShowErrorAlert: \(shouldShowErrorAlert)")
+        shouldShowErrorAlert = false
+        error = nil
+    }
+    
+    func clearTitle() {
+        title = ""
+    }
+    
+    func clearNote() {
+        note = ""
     }
 }

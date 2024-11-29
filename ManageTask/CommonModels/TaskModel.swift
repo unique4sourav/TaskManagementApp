@@ -19,19 +19,6 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-enum TaskBackground {
-    case defaultStyle
-    
-    static let allColors: [Color] = [
-        .red, .orange, .green, .cyan, .blue,
-        .indigo, .purple, .pink, .brown
-    ]
-    
-    var color: Color {
-        .orange
-    }
-}
-
 
 
 struct TaskModel: Identifiable {
@@ -45,7 +32,7 @@ struct TaskModel: Identifiable {
     
     init(title: String, dueDate: Date, priority: PriorityOfTask,
          notes: String, completionDate: Date? = nil,
-         color: Color = TaskBackground.allColors.randomElement() ?? .orange) {
+         color: Color = AppConstant.defaultTaskColor) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
