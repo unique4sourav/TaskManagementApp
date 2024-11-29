@@ -29,7 +29,7 @@ final class AddTaskViewModel: ObservableObject {
     @Published var errorAlert: (shouldShow: Bool, error: AddTaskError?) = (false, nil)
     @Published var isTaskAdded: Bool = false
     
-    @MainActor
+    
     func addTask(using taskManager: TaskManager) async throws {
         guard !title.isEmpty
         else { throw  AddTaskError.emptyTitle}
