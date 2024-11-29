@@ -179,20 +179,6 @@ extension AddTaskView {
     }
     
     private var colorPickerView: some View {
-        //        Picker("Task Background", selection: $viewModel.selectedColor) {
-        //            ForEach(TaskBackground.allColors, id: \.self) { color in
-        //                        HStack {
-        //                            Image(systemName: "circle.fill")
-        //                                .foregroundStyle(color, Color.red)
-        //
-        //                            Text("  " + color.description.capitalized + " ")
-        //                        }
-        //                    }
-        //                }
-        //                .pickerStyle(.menu)
-        
-        
-        
         VStack(alignment: .leading) {
             Text(AddTaskConstant.FieldTitle.taskBackground)
             
