@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct AddNewTaskConstant {
+struct AddTaskConstant {
     private init() { }
     
     static let navigationTitle = "Add New Task"

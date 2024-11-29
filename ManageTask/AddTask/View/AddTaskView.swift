@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddNewTaskView: View {
+struct AddTaskView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var taskManager: TaskManager
     
@@ -29,7 +29,7 @@ struct AddNewTaskView: View {
                 colorPickerView
             }
             .listStyle(.plain)
-            .navigationTitle(AddNewTaskConstant.navigationTitle)
+            .navigationTitle(AddTaskConstant.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 cancelToolBarItem
@@ -42,8 +42,8 @@ struct AddNewTaskView: View {
                     dismiss()
                 }
             }
-            .alert(Text(AddNewTaskConstant.Error.alertTitle), isPresented: $viewModel.errorAlert.shouldShow, actions: {
-                Button(AddNewTaskConstant.Error.buttonTitle) {
+            .alert(Text(AddTaskConstant.Error.alertTitle), isPresented: $viewModel.errorAlert.shouldShow, actions: {
+                Button(AddTaskConstant.Error.buttonTitle) {
                     viewModel.errorAlert = (false, nil)
                 }
             }, message: {
@@ -62,18 +62,18 @@ struct AddNewTaskView: View {
 }
 
 #Preview {
-    AddNewTaskView()
+    AddTaskView()
         .environmentObject(TaskManager())
 }
 
 
-extension AddNewTaskView {
+extension AddTaskView {
     enum FocusedField {
         case title, note
     }
     
     private var titleView: some View {
-        TextField(AddNewTaskConstant.FieldPrompt.title,
+        TextField(AddTaskConstant.FieldPrompt.title,
                   text: $viewModel.title, axis: .vertical)
             .font(.headline)
             .fontWeight(.semibold)
@@ -85,7 +85,7 @@ extension AddNewTaskView {
             .focused($focusedField, equals: .title)
             .submitLabel(.next)
             .overlay (
-                Image(systemName: AddNewTaskConstant.SFSymbolName.cross)
+                Image(systemName: AddTaskConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.title.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -121,7 +121,7 @@ extension AddNewTaskView {
     }
     
     private var dueDateView: some View {
-        DatePicker(AddNewTaskConstant.FieldTitle.dueDate,
+        DatePicker(AddTaskConstant.FieldTitle.dueDate,
                    selection: $viewModel.dueDate,
                    in: Date().adding30MinsOrCurrentIfFail...)
             .padding(.horizontal)
@@ -130,7 +130,7 @@ extension AddNewTaskView {
     
     
     private var priorityView: some View {
-        Picker(AddNewTaskConstant.FieldTitle.priority,
+        Picker(AddTaskConstant.FieldTitle.priority,
                selection: $viewModel.priority) {
             ForEach(PriorityOfTask.allCases, id: \.self) { priority in
                 Text(priority.description)
@@ -142,12 +142,12 @@ extension AddNewTaskView {
     
     private var noteView: some View {
         VStack(alignment: .leading) {
-            Text(AddNewTaskConstant.FieldTitle.note)
+            Text(AddTaskConstant.FieldTitle.note)
                 .padding(.horizontal)
             
             TextField("",
                       text: $viewModel.note,
-                      prompt: Text(AddNewTaskConstant.FieldPrompt.note),
+                      prompt: Text(AddTaskConstant.FieldPrompt.note),
                       axis: .vertical)
             .padding()
             .padding(.trailing, 30)
@@ -159,7 +159,7 @@ extension AddNewTaskView {
             .focused($focusedField, equals: .note)
             .submitLabel(.done)
             .overlay (
-                Image(systemName: AddNewTaskConstant.SFSymbolName.cross)
+                Image(systemName: AddTaskConstant.SFSymbolName.cross)
                     .padding()
                     .opacity(viewModel.note.isEmpty ? 0.0 : 1.0)
                     .onTapGesture {
@@ -194,7 +194,7 @@ extension AddNewTaskView {
         
         
         VStack(alignment: .leading) {
-            Text(AddNewTaskConstant.FieldTitle.taskBackground)
+            Text(AddTaskConstant.FieldTitle.taskBackground)
             
             HStack {
                 ForEach(viewModel.colors, id: \.self) { color in
@@ -220,13 +220,13 @@ extension AddNewTaskView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button(AddNewTaskConstant.ToolBarItemTitle.cancel, role: .destructive) {
+            Button(AddTaskConstant.ToolBarItemTitle.cancel, role: .destructive) {
                 focusedField = nil
                 
                 if !viewModel.title.isEmpty {
                     viewModel.confirmationDialouge =
                     (true,
-                     AddNewTaskConstant.ConfirmationDialouge.ActionTitle.discardSavng)
+                     AddTaskConstant.ConfirmationDialouge.ActionTitle.discardSavng)
                 }
                 else {
                     dismiss()
@@ -238,7 +238,7 @@ extension AddNewTaskView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button(AddNewTaskConstant.ToolBarItemTitle.save) {
+            Button(AddTaskConstant.ToolBarItemTitle.save) {
                 Task {
                     do {
                         try await viewModel.addNewTask(using: taskManager)

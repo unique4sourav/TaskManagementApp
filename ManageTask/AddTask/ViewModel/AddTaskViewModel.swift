@@ -18,7 +18,7 @@ enum AddNewTaskError: String, LocalizedError {
     }
 }
 
-class AddNewTaskViewModel: ObservableObject {
+class AddTaskViewModel: ObservableObject {
     @Published var title: String = ""
     @Published var dueDate = Date().adding30MinsOrCurrentIfFail
     @Published var priority: PriorityOfTask = .medium
