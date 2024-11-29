@@ -41,13 +41,9 @@ struct AddTaskConstant {
         static let save = "Save"
     }
     
-    struct ConfirmationDialouge {
+    struct ConfirmationDialougeTitle {
         private init() { }
         
-        struct ActionTitle {
-            private init() { }
-            
-            static let discardSavng = "Discard Saving"
-        }
+        static let discardSavng = "Discard Saving"
     }
 }

@@ -226,7 +226,7 @@ extension AddTaskView {
                 if !viewModel.title.isEmpty {
                     viewModel.confirmationDialouge =
                     (true,
-                     AddTaskConstant.ConfirmationDialouge.ActionTitle.discardSavng)
+                     AddTaskConstant.ConfirmationDialougeTitle.discardSavng)
                 }
                 else {
                     dismiss()
