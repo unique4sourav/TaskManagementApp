@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import Observation
 
 enum AddTaskError: String, LocalizedError {
     case emptyTitle = "Task title is empty."
@@ -18,18 +19,19 @@ enum AddTaskError: String, LocalizedError {
     }
 }
 
+@Observable
 final class AddTaskViewModel: ObservableObject {
-    @Published var title: String = ""
-    @Published var dueDate: Date = .now.adding30MinsOrCurrentIfFail
-    @Published var priority: PriorityOfTask = .medium
-    @Published var note: String = ""
-    @Published var selectedColor: Color = AppConstant.defaultTaskColor
-    @Published var colors: [Color] = AppConstant.allTaskColors
-    @Published var shouldDismissView: Bool = false
-    @Published var shouldShowConfirmationDialouge: Bool = false
-    @Published var confirmationMessage: String = ""
-    @Published var shouldShowErrorAlert: Bool = false
-    @Published var error: AddTaskError? = nil
+    var title: String = ""
+    var dueDate: Date = .now.adding30MinsOrCurrentIfFail
+    var priority: PriorityOfTask = .medium
+    var note: String = ""
+    var selectedColor: Color = AppConstant.defaultTaskColor
+    var colors: [Color] = AppConstant.allTaskColors
+    var shouldDismissView: Bool = false
+    var shouldShowConfirmationDialouge: Bool = false
+    var confirmationMessage: String = ""
+    var shouldShowErrorAlert: Bool = false
+    var error: AddTaskError? = nil
     
     
     func addTask(using taskManager: TaskManagerProtocol) {

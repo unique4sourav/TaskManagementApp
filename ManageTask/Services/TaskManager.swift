@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Observation
 
 protocol TaskManagerProtocol: AnyObject {
     var allTasks: [TaskModel] { get set }
@@ -13,8 +14,9 @@ protocol TaskManagerProtocol: AnyObject {
     func update(_ task: TaskModel)
 }
 
+@Observable
 final class TaskManager: ObservableObject, TaskManagerProtocol {
-    @Published var allTasks: [TaskModel] = []
+    var allTasks: [TaskModel] = []
     
     func addTask(_ task: TaskModel) {
         allTasks.append(task)

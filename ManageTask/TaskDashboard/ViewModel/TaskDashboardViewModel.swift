@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftUI
+import Observation
 
 
 enum FilterType: String, CaseIterable, Identifiable {
@@ -37,12 +38,13 @@ struct FilterOption: Hashable {
 }
 
 
-
+@Observable
 final class TaskDashboardViewModel: ObservableObject {
-    @Published var selectedSortingOption: SortingOption = .nameAToZ
-    @Published var selectedFilterOption: FilterOption? = nil
-    @Published var selectedTaskCompletionStatus: TaskCompletionStatus = .all
-    private var cancellables = Set<AnyCancellable>()
+    var selectedSortingOption: SortingOption = .nameAToZ
+    var selectedFilterOption: FilterOption? = nil
+    var selectedTaskCompletionStatus: TaskCompletionStatus = .all
+    
+    @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     
     
     func getTasksAsPerCompletionStatus(using taskManager: TaskManagerProtocol) -> [Binding<TaskModel>] {
