@@ -1,12 +1,14 @@
 //
-//  AddNewTaskConstant.swift
+//  AddTaskConstant.swift
 //  ManageTask
 //
 //  Created by Sourav Santra on 28/11/24.
 //
 
 import Foundation
-struct AddNewTaskConstant {
+import SwiftUI
+
+struct AddTaskConstant {
     private init() { }
     
     static let navigationTitle = "Add New Task"
@@ -16,12 +18,6 @@ struct AddNewTaskConstant {
         
         static let alertTitle = "Oops!"
         static let buttonTitle = "Understood"
-    }
-    
-    struct SFSymbolName {
-        private init() { }
-        
-        static let cross = "xmark.circle"
     }
     
     struct FieldTitle {
@@ -47,13 +43,9 @@ struct AddNewTaskConstant {
         static let save = "Save"
     }
     
-    struct ConfirmationDialouge {
+    struct ConfirmationDialougeMessage {
         private init() { }
         
-        struct ActionTitle {
-            private init() { }
-            
-            static let discardSavng = "Discard Saving"
-        }
+        static let discardSaving = "Discard Saving"
     }
 }

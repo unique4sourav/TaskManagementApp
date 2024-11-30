@@ -6,13 +6,29 @@
 //
 
 import Foundation
+import Observation
 
-class TaskManager: ObservableObject {
-    // TODO: Make the all task array empty once done with testing
-    @Published var allTasks: [TaskModel] =  /*[]*/ [PreviewContent.shared.task]
+import Foundation
+import Observation
+
+protocol TaskManagerProtocol: AnyObject {
+    var allTasks: [TaskModel] { get set }
+    func addTask(_ task: TaskModel)
+    func update(_ task: TaskModel)
+    func markComplete(_ task: TaskModel)
+    func markIncomplete(_ task: TaskModel)
+}
+
+@Observable
+final class TaskManager: ObservableObject, TaskManagerProtocol {
+    var allTasks: [TaskModel] = /*[]*/ [PreviewContent.shared.task]
     
     func addTask(_ task: TaskModel) {
         allTasks.append(task)
+    }
+    
+    func update(_ task: TaskModel) {
+        // TODO: Add implementation
     }
     
     func markComplete(_ task: TaskModel) {
@@ -30,5 +46,3 @@ class TaskManager: ObservableObject {
     }
     
 }
-
-

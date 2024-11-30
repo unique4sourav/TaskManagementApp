@@ -19,10 +19,4 @@ struct TaskDashboardSortingConstant {
         static let apply = "Apply"
         static let cancel = "Cancel"
     }
-    
-    struct SFSymbolName {
-        private init() { }
-        
-        static let checkmark = "checkmark"
-    }
 }
