@@ -26,12 +26,12 @@ final class AddTaskViewModel: ObservableObject {
     var priority: PriorityOfTask = .medium
     var note: String = ""
     var selectedColor: Color = AppConstant.defaultTaskColor
-    var colors: [Color] = AppConstant.allTaskColors
+    let colors: [Color] = AppConstant.allTaskColors
     var shouldDismissView: Bool = false
     var shouldShowConfirmationDialouge: Bool = false
-    var confirmationMessage: String = ""
+    @ObservationIgnored private(set) var confirmationMessage: String = ""
     var shouldShowErrorAlert: Bool = false
-    var error: AddTaskError? = nil
+    @ObservationIgnored private(set) var error: AddTaskError? = nil
     
     
     func addTask(using taskManager: TaskManagerProtocol) {

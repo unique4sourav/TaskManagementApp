@@ -40,7 +40,8 @@ struct AddTaskView: View {
                     viewModel.dismissView()
                 }
             }
-            .alert(Text(AddTaskConstant.Error.alertTitle), isPresented: $viewModel.shouldShowErrorAlert, actions: {
+            .alert(Text(AddTaskConstant.Error.alertTitle),
+                   isPresented: $viewModel.shouldShowErrorAlert, actions: {
                 Button(AddTaskConstant.Error.buttonTitle) {
                     viewModel.acknowledgeError()
                 }
