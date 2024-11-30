@@ -20,6 +20,7 @@ class PreviewContent {
                           completionDate: [
                             Date().addingTimeInterval(Double((-10000...10000).randomElement() ?? 0)),
                             nil
-                          ] .randomElement() ?? nil
+                          ] .randomElement() ?? nil,
+                          color: AppConstant.allTaskColors.randomElement() ?? AppConstant.defaultTaskColor
     )
 }

@@ -12,8 +12,6 @@ struct TaskDetailsView: View {
     
     @EnvironmentObject private var taskManager: TaskManager
     @StateObject private var viewModel = TaskDetailsViewModel()
-    @State private var injectedPropertyDependency: Bool = false
-    @State private var shouldEditTask: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -109,11 +107,11 @@ extension TaskDetailsView {
     private var editTaskToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                shouldEditTask.toggle()
+                viewModel.edit(task)
             } label: {
                 Image(systemName: TaskDetailsConstant.SFSymbolName.edit)
             }
-            .sheet(isPresented: $shouldEditTask) {
+            .sheet(isPresented: $viewModel.shouldEditTask) {
                 EmptyView()
             }
         }
