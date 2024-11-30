@@ -32,7 +32,7 @@ final class AddTaskViewModel: ObservableObject {
     @Published var error: AddTaskError? = nil
     
     
-    func addTask(using taskManager: TaskManager) {
+    func addTask(using taskManager: TaskManagerProtocol) {
         guard !title.isEmpty
         else {
             error = AddTaskError.emptyTitle
@@ -69,7 +69,6 @@ final class AddTaskViewModel: ObservableObject {
     }
     
     func acknowledgeError() {
-        print("shouldShowErrorAlert: \(shouldShowErrorAlert)")
         shouldShowErrorAlert = false
         error = nil
     }
