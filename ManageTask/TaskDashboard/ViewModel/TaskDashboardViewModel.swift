@@ -47,20 +47,25 @@ final class TaskDashboardViewModel: ObservableObject {
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     
     
-    func getTasksAsPerCompletionStatus(using taskManager: TaskManagerProtocol) -> [Binding<any TaskModelProtocol>] {
+    func getTasksAsPerCompletionStatus(using taskManager: TaskManagerProtocol) -> [any TaskModelProtocol] {
         return taskManager.allTasks.indices
             .filter{ filterTaskIndicesByCompletionStatus(index: $0, using: taskManager) }
             .filter{ filterTaskIndicesBySelectedFilter(index: $0, using: taskManager) }
             .sorted(by: { sortBySelectedOption(firstIndex: $0, secondIndex: $1, using: taskManager) })
-            .compactMap { index in
-                return Binding(
-                    get: { taskManager.allTasks[index] },
-                    set: { taskManager.allTasks[index] = $0 }
-                )
-            }
+            .compactMap({ taskManager.allTasks[$0] })
     }
     
-    private func sortBySelectedOption(firstIndex: Int, secondIndex: Int, using taskManager: TaskManagerProtocol) -> Bool {
+    func toggleCompletion(of task: TaskModelProtocol, using taskManager: TaskManagerProtocol) {
+        task.isCompleted ?
+        taskManager.markIncomplete(task) :
+        taskManager.markComplete(task)
+    }
+    
+}
+
+// MARK: - Internal functions
+private extension TaskDashboardViewModel {
+    func sortBySelectedOption(firstIndex: Int, secondIndex: Int, using taskManager: TaskManagerProtocol) -> Bool {
         guard taskManager.allTasks.count > firstIndex && taskManager.allTasks.count > secondIndex
         else { return false }
         
@@ -86,7 +91,7 @@ final class TaskDashboardViewModel: ObservableObject {
         }
     }
     
-    private func filterTaskIndicesByCompletionStatus(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
+    func filterTaskIndicesByCompletionStatus(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
         switch selectedTaskCompletionStatus {
         case .all:
             return true
@@ -104,7 +109,7 @@ final class TaskDashboardViewModel: ObservableObject {
         }
     }
     
-    private func filterTaskIndicesBySelectedFilter(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
+    func filterTaskIndicesBySelectedFilter(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
         if selectedFilterOption != nil {
             switch selectedFilterOption!.type {
             case .dueDate:

@@ -28,6 +28,7 @@ struct AppConstant {
         static let checkmark = "checkmark"
         static let incompleteStateShownInCircle = "circle"
         static let completedStateShownInCircle = "checkmark.circle.fill"
+        static let rightArrow = "chevron.right"
     }
     
 }

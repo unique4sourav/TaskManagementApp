@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct TaskView: View {
-    @Binding var task: any TaskModelProtocol
+    @EnvironmentObject var taskManager: TaskManager
+    
+    let task: any TaskModelProtocol
+    @ObservedObject var viewModel: TaskDashboardViewModel
     
     var body: some View {
         VStack {
@@ -30,8 +33,9 @@ struct TaskView: View {
 }
 
 #Preview {
-    @Previewable @State var task = PreviewContent.shared.task
-    TaskView(task: $task)
+    @Previewable @StateObject var viewModel = TaskDashboardViewModel()
+    let task = PreviewContent.shared.task
+    TaskView(task: task, viewModel: viewModel)
 }
 
 
@@ -64,13 +68,13 @@ extension TaskView {
                 .completed : .incomplete,
             foregroundColor: .white)
         .frame(width: 20)
-//        .onTapGesture {
-//            task.toggleCompleteness()
-//        }
+        .onTapGesture {
+            viewModel.toggleCompletion(of: task, using: taskManager)
+        }
     }
     
     private var rightArrow: some View {
-        Image(systemName: "chevron.right")
+        Image(systemName: AppConstant.SFSymbolName.rightArrow)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: 8)

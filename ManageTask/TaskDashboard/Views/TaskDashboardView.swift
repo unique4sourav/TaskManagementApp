@@ -56,21 +56,19 @@ extension TaskDashboardView {
     }
     
     private var taskList: some View {
-        let tasks = viewModel.getTasksAsPerCompletionStatus(using: taskManager)
+        let tasks: [TaskModelProtocol] = viewModel.getTasksAsPerCompletionStatus(using: taskManager)
         return List {
-            ForEach(0..<tasks.count, id: \.self) { index in
-                let task = tasks[index]
+            ForEach(tasks, id: \.id) { task in
                 ZStack(alignment: .leading) {
-                    TaskView(task: task)
+                    TaskView(task: task, viewModel: viewModel)
                     NavigationLink {
-                        TaskDetailsView(task: task.wrappedValue)
+                        TaskDetailsView(task: task)
                     } label: {
                         EmptyView()
                     }
                     .opacity(0)
                 }
                 .listRowSeparator(.hidden)
-                
             }
         }
     }
