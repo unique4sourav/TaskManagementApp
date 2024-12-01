@@ -19,7 +19,7 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-protocol TaskModelProtocol: Identifiable, Hashable {
+protocol TaskModelProtocol {
     var id: UUID { get }
     var title: String { get set }
     var dueDate: Date { get set }
