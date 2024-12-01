@@ -14,14 +14,6 @@ enum TaskCompletionIcon {
         systemName: AppConstant.SFSymbolName.completedStateShownInCircle)
 }
 
-enum TaskCompletionStatus: LocalizedStringKey, CaseIterable, Identifiable {
-    case all = "All"
-    case overdue = "Overdue"
-    case incomplete = "Incomplete"
-    case completed = "Completed"
-    
-    var id: Self { self }
-}
 
 struct TaskCompletionIconView: View {
     var taskCompletionTask: TaskCompletionStatus
