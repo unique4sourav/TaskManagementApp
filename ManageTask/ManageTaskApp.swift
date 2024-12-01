@@ -10,7 +10,7 @@ import SwiftData
 
 @main
 struct ManageTaskApp: App {
-    @StateObject private var taskManager = TaskManager()
+    @StateObject private var taskManager = TaskManager(dataStore: InMemoryTaskDataStore())
 
     var body: some Scene {
         WindowGroup {

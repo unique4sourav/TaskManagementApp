@@ -52,7 +52,7 @@ final class AddTaskViewModel: ObservableObject {
         let newTask = TaskModel(
             title: title, dueDate: dueDate, priority: priority, notes: note, color: selectedColor)
         
-        taskManager.addTask(newTask)
+        taskManager.add(newTask)
         dismissView()
     }
     

@@ -64,7 +64,7 @@ struct AddTaskView: View {
 
 #Preview {
     AddTaskView()
-        .environmentObject(TaskManager())
+        .environmentObject(TaskManager(dataStore: PreviewContent.shared.inMemoryDataStore))
 }
 
 // MARK: - SubViews

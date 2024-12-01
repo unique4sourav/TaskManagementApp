@@ -12,7 +12,7 @@ class PreviewContent {
     static let shared = PreviewContent()
     
     private init() { }
-    
+    let inMemoryDataStore = InMemoryTaskDataStore()
     let task: any TaskModelProtocol =  TaskModel(title: "Complete developing the task management app.",
                           dueDate: Date().addingTimeInterval(Double((-1_000_000_0...1_000_000_0).randomElement() ?? 0)),
                           priority: PriorityOfTask.allCases.randomElement() ?? .medium,

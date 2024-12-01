@@ -139,5 +139,5 @@ extension TaskDetailsView {
 #Preview {
     @Previewable @State var task = PreviewContent.shared.task
     TaskDetailsView(task: task)
-        .environmentObject(TaskManager())
+        .environmentObject(TaskManager(dataStore: PreviewContent.shared.inMemoryDataStore))
 }

@@ -40,7 +40,7 @@ struct TaskDashboardView: View {
 
 #Preview {
     TaskDashboardView()
-        .environmentObject(TaskManager())
+        .environmentObject(TaskManager(dataStore: PreviewContent.shared.inMemoryDataStore))
 }
 
 
