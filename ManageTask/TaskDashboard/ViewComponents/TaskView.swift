@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskView: View {
-    @Binding var task: TaskModel
+    @Binding var task: any TaskModelProtocol
     
     var body: some View {
         VStack {
@@ -64,9 +64,9 @@ extension TaskView {
                 .completed : .incomplete,
             foregroundColor: .white)
         .frame(width: 20)
-        .onTapGesture {
-            task.toggleCompleteness()
-        }
+//        .onTapGesture {
+//            task.toggleCompleteness()
+//        }
     }
     
     private var rightArrow: some View {

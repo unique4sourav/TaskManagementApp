@@ -13,19 +13,19 @@ import Observation
 class TaskDetailsViewModel: ObservableObject {
     var shouldEditTask: Bool = false
     
-    func markComplete(_ task: TaskModel, using taskManager: TaskManager) {
+    func markComplete(_ task: any TaskModelProtocol, using taskManager: TaskManager) {
         taskManager.markComplete(task)
     }
     
-    func markIncomplete(_ task: TaskModel, using taskManager: TaskManager) {
+    func markIncomplete(_ task: any TaskModelProtocol, using taskManager: TaskManager) {
         taskManager.markIncomplete(task)
     }
     
-    func edit(_ task: TaskModel) {
+    func edit(_ task: any TaskModelProtocol) {
         shouldEditTask = true
     }
     
-    func completionStatusColor(for task: TaskModel) -> Color {
+    func completionStatusColor(for task: any TaskModelProtocol) -> Color {
         switch task.completionStatus {
         case .all:
             return .primary
@@ -39,7 +39,7 @@ class TaskDetailsViewModel: ObservableObject {
     }
     
     
-    func priorityColor(for task: TaskModel) -> Color {
+    func priorityColor(for task: any TaskModelProtocol) -> Color {
         if task.isCompleted {
             return .primary
         }

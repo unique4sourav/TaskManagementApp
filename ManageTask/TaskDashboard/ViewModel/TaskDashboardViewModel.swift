@@ -47,7 +47,7 @@ final class TaskDashboardViewModel: ObservableObject {
     @ObservationIgnored private var cancellables = Set<AnyCancellable>()
     
     
-    func getTasksAsPerCompletionStatus(using taskManager: TaskManagerProtocol) -> [Binding<TaskModel>] {
+    func getTasksAsPerCompletionStatus(using taskManager: TaskManagerProtocol) -> [Binding<any TaskModelProtocol>] {
         return taskManager.allTasks.indices
             .filter{ filterTaskIndicesByCompletionStatus(index: $0, using: taskManager) }
             .filter{ filterTaskIndicesBySelectedFilter(index: $0, using: taskManager) }

@@ -19,9 +19,35 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
+protocol TaskModelProtocol: Identifiable, Hashable {
+    var id: UUID { get }
+    var title: String { get set }
+    var dueDate: Date { get set }
+    var priority: PriorityOfTask { get set }
+    var note: String { get set }
+    var completionDate: Date? { get set }
+    var color: Color { get set }
+}
 
+extension TaskModelProtocol {
+    var isCompleted: Bool {
+        completionDate != nil ? true : false
+    }
+    
+    var completionStatus: TaskCompletionStatus {
+        if isCompleted {
+            return .completed
+        }
+        else if dueDate > Date() {
+            return .incomplete
+        }
+        else {
+            return .overdue
+        }
+    }
+}
 
-struct TaskModel: Identifiable {
+struct TaskModel: TaskModelProtocol {
     let id = UUID()
     var title: String
     var dueDate: Date
@@ -41,33 +67,33 @@ struct TaskModel: Identifiable {
         self.color = color
     }
     
-    mutating func toggleCompleteness() {
-        if completionDate == nil {
-            completionDate = Date()
-        }
-        else {
-            completionDate = nil
-        }
-    }
+//    mutating func toggleCompleteness() {
+//        if completionDate == nil {
+//            completionDate = Date()
+//        }
+//        else {
+//            completionDate = nil
+//        }
+//    }
 }
 
-extension TaskModel {
-    var isCompleted: Bool {
-        completionDate != nil ? true : false
-    }
-    
-    var completionStatus: TaskCompletionStatus {
-        if isCompleted {
-            return .completed
-        }
-        else if dueDate > Date() {
-            return .incomplete
-        }
-        else {
-            return .overdue
-        }
-    }
-    
-    
-    
-}
+//extension TaskModel {
+//    var isCompleted: Bool {
+//        completionDate != nil ? true : false
+//    }
+//    
+//    var completionStatus: TaskCompletionStatus {
+//        if isCompleted {
+//            return .completed
+//        }
+//        else if dueDate > Date() {
+//            return .incomplete
+//        }
+//        else {
+//            return .overdue
+//        }
+//    }
+//    
+//    
+//    
+//}

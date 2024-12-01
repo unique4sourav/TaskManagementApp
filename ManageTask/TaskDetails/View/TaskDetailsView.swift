@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct TaskDetailsView: View {
-    let task: TaskModel
+    let task: any TaskModelProtocol
     
     @EnvironmentObject private var taskManager: TaskManager
     @StateObject private var viewModel = TaskDetailsViewModel()
