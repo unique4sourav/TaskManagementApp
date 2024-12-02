@@ -68,61 +68,57 @@ private extension TaskDashboardViewModel {
     func sortBySelectedOption(firstIndex: Int, secondIndex: Int, using taskManager: TaskManagerProtocol) -> Bool {
         guard taskManager.allTasks.count > firstIndex && taskManager.allTasks.count > secondIndex
         else { return false }
+        let firstTask = taskManager.allTasks[firstIndex]
+        let secondTask = taskManager.allTasks[secondIndex]
         
         switch selectedSortingOption {
         case .nameAToZ:
-            return taskManager.allTasks[firstIndex].title <
-                taskManager.allTasks[secondIndex].title
+            return firstTask.title < secondTask.title
         case .nameZToA:
-            return taskManager.allTasks[firstIndex].title >
-            taskManager.allTasks[secondIndex].title
+            return firstTask.title > secondTask.title
         case .priorityLowToHigh:
-            return taskManager.allTasks[firstIndex].priority.rawValue <
-                taskManager.allTasks[secondIndex].priority.rawValue
+            return firstTask.priority.rawValue < secondTask.priority.rawValue
         case .priorityHighToLow:
-            return taskManager.allTasks[firstIndex].priority.rawValue >
-            taskManager.allTasks[secondIndex].priority.rawValue
+            return firstTask.priority.rawValue > secondTask.priority.rawValue
         case .dueDateAsAscending:
-            return taskManager.allTasks[firstIndex].dueDate <
-                taskManager.allTasks[secondIndex].dueDate
+            return firstTask.dueDate < secondTask.dueDate
         case .dueDateAsDecending:
-            return taskManager.allTasks[firstIndex].dueDate >
-            taskManager.allTasks[secondIndex].dueDate
+            return firstTask.dueDate > secondTask.dueDate
         }
     }
     
     func filterTaskIndicesByCompletionStatus(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
+        let task = taskManager.allTasks[index]
         switch selectedTaskCompletionStatus {
         case .all:
             return true
             
         case .overdue:
-            return taskManager.allTasks[index].completionDate == nil &&
-            taskManager.allTasks[index].dueDate <= Date()
+            return task.completionDate == nil && task.dueDate <= Date()
             
         case .incomplete:
-            return taskManager.allTasks[index].completionDate == nil &&
-            taskManager.allTasks[index].dueDate > Date()
+            return task.completionDate == nil && task.dueDate > Date()
             
         case .completed:
-            return taskManager.allTasks[index].completionDate != nil
+            return task.completionDate != nil
         }
     }
     
     func filterTaskIndicesBySelectedFilter(index: Int, using taskManager: TaskManagerProtocol) -> Bool {
         if selectedFilterOption != nil {
+            let task = taskManager.allTasks[index]
             switch selectedFilterOption!.type {
             case .dueDate:
-                return (selectedFilterOption!.fromDate <= taskManager.allTasks[index].dueDate) &&
-                (selectedFilterOption!.toDate >= taskManager.allTasks[index].dueDate)
+                return (selectedFilterOption!.fromDate <= task.dueDate) &&
+                (selectedFilterOption!.toDate >= task.dueDate)
                 
             case .completionDate:
-                return taskManager.allTasks[index].completionDate != nil &&
-                (selectedFilterOption!.fromDate <= taskManager.allTasks[index].completionDate!) &&
-                (selectedFilterOption!.toDate >= taskManager.allTasks[index].completionDate!)
+                return task.completionDate != nil &&
+                (selectedFilterOption!.fromDate <= task.completionDate!) &&
+                (selectedFilterOption!.toDate >= task.completionDate!)
                 
             case .priority:
-                return taskManager.allTasks[index].priority == selectedFilterOption!.priority
+                return task.priority == selectedFilterOption!.priority
             }
         }
         else {
