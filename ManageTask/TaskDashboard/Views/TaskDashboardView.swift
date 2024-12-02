@@ -7,9 +7,10 @@
 
 import SwiftUI
 
-struct HomeView: View {
-    @StateObject var viewModel = HomeViewModel()
-    @State var shouldShowAddNewTaskView = false
+struct TaskDashboardView: View {
+    @EnvironmentObject var taskManager: TaskManager
+    @StateObject var viewModel = TaskDashboardViewModel()
+    @State var shouldShowAddTaskView = false
     @State var shouldShowFilteringOptionView = false
     @State var shouldShowSortingOptionView = false
     
@@ -22,9 +23,9 @@ struct HomeView: View {
                 taskList
                     .listStyle(.plain)
             }
-            .navigationTitle("All Tasks")
+            .navigationTitle(TaskDashboardConstant.navigationTitle)
             .toolbar {
-                addNewTaskToolBarItem
+                addTaskToolBarItem
                 
                 filteringToolBarItem
                 
@@ -38,14 +39,14 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    TaskDashboardView()
+        .environmentObject(TaskManager())
 }
 
 
-extension HomeView {
+extension TaskDashboardView {
     private var taskCompletionSegment: some View {
-        Picker("Task Completion Status",
-               selection: $viewModel.selectedTaskCompletionStatus) {
+        Picker("", selection: $viewModel.selectedTaskCompletionStatus) {
             ForEach(TaskCompletionStatus.allCases) { taskCompletionStatus in
                 Text(taskCompletionStatus.rawValue)
             }
@@ -56,7 +57,8 @@ extension HomeView {
     
     private var taskList: some View {
         List {
-            ForEach(viewModel.getTasksAsPerCompletionStatus()) { task in
+            ForEach(viewModel.getTasksAsPerCompletionStatus(using: taskManager))
+            { task in
                 ZStack(alignment: .leading) {
                     TaskView(task: task)
                     NavigationLink {
@@ -73,17 +75,17 @@ extension HomeView {
     }
     
     
-    private var addNewTaskToolBarItem: ToolbarItem<(), some View> {
+    private var addTaskToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                shouldShowAddNewTaskView.toggle()
+                shouldShowAddTaskView.toggle()
             } label: {
-                Image(systemName: "plus.circle")
+                Image(systemName: AppConstant.SFSymbolName.add)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
-            .sheet(isPresented: $shouldShowAddNewTaskView) {
-                EmptyView()
+            .sheet(isPresented: $shouldShowAddTaskView) {
+                AddTaskView()
             }
         }
     }
@@ -94,13 +96,13 @@ extension HomeView {
                 shouldShowSortingOptionView.toggle()
             } label: {
                 Image(systemName: viewModel.selectedFilterOption != nil ?
-                      "line.3.horizontal.decrease.circle.fill" :
-                      "line.3.horizontal.decrease.circle")
+                      AppConstant.SFSymbolName.activeFilter :
+                        AppConstant.SFSymbolName.inactiveFilter)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
             }
             .sheet(isPresented: $shouldShowSortingOptionView) {
-                FilteringView(viewModel: viewModel)
+                TaskDashboardFilteringView(currentFilter: $viewModel.selectedFilterOption)
             }
         }
     }
@@ -112,37 +114,15 @@ extension HomeView {
                 shouldShowFilteringOptionView.toggle()
             } label: {
                 ZStack {
-                    Image(systemName: "arrow.up.arrow.down.circle")
+                    Image(systemName: AppConstant.SFSymbolName.sort)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                 }
             }
             .sheet(isPresented: $shouldShowFilteringOptionView) {
-                SortingView(viewModel: viewModel)
+                TaskDashboardSortingView(currentSortingOption: $viewModel.selectedSortingOption)
             }
         }
     }
     
-    private var addNewTaskCustomButton: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.mint)
-                .northWestShadow(radius: 3, offset: 3)
-                .frame(width: 60, height: 60)
-            
-            RoundedRectangle(cornerRadius: 8)
-                .inset(by: 3)
-                .fill(Color.mint)
-                .southEastShadow(radius: 1, offset: 1)
-                .frame(width: 60, height: 60)
-            
-            Image(systemName: "plus.circle")
-                .resizable()
-                .foregroundStyle(Color.white)
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 40)
-            
-        }
-        .offset(x: -24, y: -24)
-    }
 }

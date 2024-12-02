@@ -22,7 +22,7 @@ struct FilteringListRowSelectionView<Content: View>: View {
                 Spacer()
                 
                 if locallySelectedFilter?.type == filterOption.type {
-                    Image(systemName: "checkmark")
+                    Image(systemName: AppConstant.SFSymbolName.checkmark)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 16)

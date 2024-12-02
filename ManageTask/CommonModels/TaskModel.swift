@@ -19,9 +19,6 @@ enum PriorityOfTask: Int, CaseIterable, Identifiable {
     var id: Self { self }
 }
 
-enum TaskColorString: String, CaseIterable {
-    case red, orange, green, mint, teal, cyan, blue, indigo, purple, pink, brown
-}
 
 
 struct TaskModel: Identifiable {
@@ -29,16 +26,19 @@ struct TaskModel: Identifiable {
     var title: String
     var dueDate: Date
     var priority: PriorityOfTask
-    var notes: String?
+    var note: String
     var completionDate: Date? = nil
-    let color = Color(TaskColorString.allCases.randomElement())
+    var color: Color
     
-    init(title: String, dueDate: Date, priority: PriorityOfTask, notes: String? = nil, completionDate: Date? = nil) {
+    init(title: String, dueDate: Date, priority: PriorityOfTask,
+         notes: String, completionDate: Date? = nil,
+         color: Color = AppConstant.defaultTaskColor) {
         self.title = title
         self.dueDate = dueDate
         self.priority = priority
-        self.notes = notes
+        self.note = notes
         self.completionDate = completionDate
+        self.color = color
     }
     
     mutating func toggleCompleteness() {

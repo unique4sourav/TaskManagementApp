@@ -18,26 +18,16 @@ enum SortingOption: String, CaseIterable, Identifiable {
 }
 
 
-struct SortingView: View {
+struct TaskDashboardSortingView: View {
     @Environment(\.dismiss) var dismiss
-    @State var fromDate: Date = Date()
-    @State var ToDate: Date = Date()
-    @State var selectedSortingOption: SortingOption?
-    //@State var selectedFilteringOption: FilteringOption?
-    @State var selectedTaskPriority: PriorityOfTask = .high
-    @ObservedObject var viewModel: HomeViewModel
-    
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        _selectedSortingOption = State(initialValue: viewModel.selectedSortingOption)
-    }
-    
+    @State var locallySelectedSortingOption: SortingOption?
+    @Binding var currentSortingOption: SortingOption
     
     var body: some View {
         NavigationStack {
             sortingOptionList
             .listStyle(.insetGrouped)
-            .navigationTitle("Sort Tasks")
+            .navigationTitle(TaskDashboardSortingConstant.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 cancelToolBarItem
@@ -45,21 +35,24 @@ struct SortingView: View {
                 applyToolBarItem
             }
         }
+        .onAppear {
+            self.locallySelectedSortingOption = currentSortingOption
+        }
     }
 }
 
 #Preview {
-    SortingView(viewModel: HomeViewModel())
+    TaskDashboardSortingView(currentSortingOption: .constant(.nameAToZ))
 }
 
 
-extension SortingView {
+extension TaskDashboardSortingView {
     private var sortingOptionList: some View {
-        List(selection: $selectedSortingOption) {
-            Section("Sort by:".uppercased()) {
+        List(selection: $locallySelectedSortingOption) {
+            Section(TaskDashboardSortingConstant.sortSectionTitle.uppercased()) {
                 ForEach(SortingOption.allCases) { option in
                     CheckMarkRow(text: option.rawValue,
-                                 isSelected: selectedSortingOption == option)
+                                 isSelected: locallySelectedSortingOption == option)
                 }
             }
         }
@@ -67,7 +60,7 @@ extension SortingView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel") {
+            Button(TaskDashboardSortingConstant.ToolBarItemTitle.cancel) {
                 dismiss()
             }
         }
@@ -75,9 +68,9 @@ extension SortingView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Apply") {
-                if let selectedSortingOption {
-                    viewModel.selectedSortingOption = selectedSortingOption
+            Button(TaskDashboardSortingConstant.ToolBarItemTitle.apply) {
+                if let locallySelectedSortingOption {
+                    currentSortingOption = locallySelectedSortingOption
                     dismiss()
                 }
             }

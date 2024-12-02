@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct FilteringView: View {
+struct TaskDashboardFilteringView: View {
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var viewModel: HomeViewModel
+    @Binding var currentFilter: FilterOption?
     @State var locallySelectedFilter: FilterOption? = nil
     @State private var filterOptions: [FilterOption] = []
     
@@ -17,7 +17,7 @@ struct FilteringView: View {
         NavigationStack {
             filteringOptionList
                 .listStyle(.insetGrouped)
-                .navigationTitle("Filter Tasks")
+                .navigationTitle(TaskDashboardFilteringConstant.navigationTitle)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     cancelToolBarItem
@@ -25,58 +25,61 @@ struct FilteringView: View {
                     applyToolBarItem
                 }
         }
+        .onAppear {
+            configureFilterOptionsAsPerCurrentFilter()
+        }
     }
 }
 
 #Preview {
-    FilteringView(viewModel: HomeViewModel())
+    TaskDashboardFilteringView(currentFilter: .constant(nil))
 }
 
 
-extension FilteringView {
-    init(viewModel: HomeViewModel) {
-        self.viewModel = viewModel
-        _locallySelectedFilter = State(initialValue: viewModel.selectedFilterOption)
-        
-        if viewModel.selectedFilterOption != nil {
-            switch viewModel.selectedFilterOption!.type {
+extension TaskDashboardFilteringView {
+    
+    private func configureFilterOptionsAsPerCurrentFilter() {
+        if currentFilter != nil {
+            locallySelectedFilter = currentFilter
+            
+            switch currentFilter!.type {
             case .dueDate:
-                _filterOptions = State(initialValue: [
-                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
-                          toDate: viewModel.selectedFilterOption!.toDate, type: .dueDate),
+                filterOptions =  [
+                    .init(fromDate: currentFilter!.fromDate,
+                          toDate: currentFilter!.toDate, type: .dueDate),
                     .init(type: .completionDate),
                     .init(type: .priority)
-                ])
+                ]
                 
             case .completionDate:
-                _filterOptions = State(initialValue: [
+                filterOptions = [
                     .init(type: .dueDate),
-                    .init(fromDate: viewModel.selectedFilterOption!.fromDate,
-                          toDate: viewModel.selectedFilterOption!.toDate, type: .completionDate),
+                    .init(fromDate: currentFilter!.fromDate,
+                          toDate: currentFilter!.toDate, type: .completionDate),
                     .init(type: .priority)
-                ])
+                ]
                 
             case .priority:
-                _filterOptions = State(initialValue: [
+                filterOptions = [
                     .init(type: .dueDate),
                     .init(type: .completionDate),
                     .init(fromDate: Date(), toDate: Date(),
-                          priority: viewModel.selectedFilterOption!.priority, type: .priority)
-                ])
+                          priority: currentFilter!.priority, type: .priority)
+                ]
             }
         }
         else {
-            _filterOptions = State(initialValue: [
+            filterOptions = [
                 .init(type: .dueDate),
                 .init(type: .completionDate),
                 .init(type: .priority)
-            ])
+            ]
         }
     }
     
     private var filteringOptionList: some View {
         List {
-            Section("Filter by:".uppercased()) {
+            Section(TaskDashboardFilteringConstant.filterSectionTitle.uppercased()) {
                 ForEach($filterOptions, id: \.type) { $option in
                     switch option.type {
                     case .dueDate, .completionDate:
@@ -94,11 +97,7 @@ extension FilteringView {
                             title: option.type.rawValue,
                             filterOption: $option,
                             locallySelectedFilter: $locallySelectedFilter,
-                            content: Picker("", selection: $option.priority) {
-                                ForEach(PriorityOfTask.allCases, id: \.self) { priority in
-                                    Text(priority.description)
-                                }
-                            }.pickerStyle(.menu)
+                            content: FilterListRowPriorityView(priority: $option.priority)
                         )
                     }
                 }
@@ -109,7 +108,7 @@ extension FilteringView {
     
     private var cancelToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarLeading) {
-            Button("Cancel") {
+            Button(TaskDashboardFilteringConstant.ToolBarItemTitle.cancel) {
                 dismiss()
             }
         }
@@ -117,7 +116,7 @@ extension FilteringView {
     
     private var applyToolBarItem: ToolbarItem<(), some View> {
         ToolbarItem(placement: .topBarTrailing) {
-            Button("Apply") {
+            Button(TaskDashboardFilteringConstant.ToolBarItemTitle.apply) {
                 if locallySelectedFilter != nil {
                     switch locallySelectedFilter!.type {
                     case .dueDate, .completionDate:
@@ -137,10 +136,10 @@ extension FilteringView {
                             }
                         }
                     }
-                    viewModel.selectedFilterOption = locallySelectedFilter
+                    currentFilter = locallySelectedFilter
                 }
                 else {
-                    viewModel.selectedFilterOption = nil
+                    currentFilter = nil
                 }
                 dismiss()
             }
@@ -150,15 +149,4 @@ extension FilteringView {
 
 
 
-struct FilterListRowDateView: View {
-    
-    @Binding var fromDate: Date
-    @Binding var toDate: Date
-    
-    var body: some View {
-        VStack {
-            DatePicker("From", selection: $fromDate, in: ...toDate)
-            DatePicker("To", selection: $toDate, in: fromDate...)
-        }
-    }
-}
+
